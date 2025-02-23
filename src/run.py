@@ -62,6 +62,9 @@ if __name__ == "__main__":
         checkpoint_path = save_dir / args.checkpoint
 
     # Training
+    # TODO: either split for different types of model (sklearn/torch)
+    #       or implement a more comprehensive train/eval func api 
+    
     if args.train:
         save_file = save_data_dir / f"train.npz"
         data_loader = get_dataloader(train_dir, save_path=save_file, batch_size=args.batch_size, for_torch="ann" in args.model)

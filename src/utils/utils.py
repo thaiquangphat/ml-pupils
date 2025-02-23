@@ -38,7 +38,7 @@ def load_pkl(save_path):
         model = pickle.load(f)
     return model
 
-def kaggle_download(dataset_name, save_path):
+def kaggle_download(dataset_name, save_dir):
     """
     Downloads a dataset from Kaggle using the Kaggle CLI.
     
@@ -54,15 +54,15 @@ def kaggle_download(dataset_name, save_path):
         kaggle_download("zynicide/wine-reviews", save_path="data")
     """
     # Ensure the save directory exists
-    os.makedirs(save_path, exist_ok=True)
+    os.makedirs(save_dir, exist_ok=True)
 
     # Construct the Kaggle CLI command
-    command = f"kaggle datasets download -d {dataset_name} -p {save_path} --unzip"
+    command = f"kaggle datasets download -d {dataset_name} -p {save_dir} --unzip"
 
     # Execute the command
     os.system(command)
 
-    print(f"Dataset '{dataset_name}' downloaded and saved to '{save_path}'.")
+    print(f"Dataset '{dataset_name}' downloaded and saved to '{save_dir}'.")
 
 
     
