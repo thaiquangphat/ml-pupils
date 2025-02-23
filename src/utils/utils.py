@@ -18,19 +18,25 @@ def get_latest_model_path(directory):
     return model_files[0] if model_files else None
 
 def get_save_name(model_name, extension):
+    """
+    Return the filename for saved model
+    Example usage:
+        get_save_name("decision_tree", "pkl") -> return pickle file
+        get_save_name("ann", "pt") -> return torch.save file
+    """
     timestamp = datetime.now().strftime("%d%m%Y_%H-%M-%S")
     return f"{model_name}_{timestamp}.{extension}"
 
 def save_pkl(model, save_path):
+    """Save model to using pickle"""
     with open(save_path, "wb") as f:
         pickle.dump(model, f)
 
 def load_pkl(save_path):
+    """Load model using pickle"""
     with open(save_path, "rb") as f:
         model = pickle.load(f)
     return model
-
-import os
 
 def kaggle_download(dataset_name, save_path):
     """
