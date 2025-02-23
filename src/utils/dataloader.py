@@ -39,8 +39,15 @@ class ImageDataset(Dataset):
 
 def get_dataloader(image_dir, save_path=None, batch_size=64, img_size=IMG_SIZE, for_torch=False):
     """Returns DataLoader for ANN models or NumPy arrays for ML models.
-
-    If save_path is provided and data exists, load it. Otherwise, create a new dataset and save it.
+    Parameters: 
+        image_dir: the directory contain subdirectories for classes of images
+        save_path: if save_path is provided and data exists, load it. Otherwise, create a new dataset and save it.
+        batch_size: number of sample in a batch, for Dataloader. default: 64
+        img_size: for resizing image. default: (256,256)
+        for_torch: for sklearn models or for torch models
+    Return:
+        if for_torch = true return a torch.utils.data.Dataloader, 
+        otherwise return a tuple of (images, labels) in numpy.array format
     """
     if save_path:
         X, y = get_saved_numpy(save_path)

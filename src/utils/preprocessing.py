@@ -49,10 +49,16 @@ def preprocess_mri(img):
     img = img / 255.0          
     return img
     
-def preprocess_images(image_dir, img_size=(256, 256), for_torch=False):
+def preprocess_images(image_dir, img_size=(256, 256)):
     """
     Load all images in a directory and apply preprocessing.
-    Parasm
+    
+    Parameters:
+        image_dir: the directory include subdirectories corresponding to classes of images
+        img_size: for resizing image. default (256,256)
+    
+    Return:
+        tuple of (data, labels) in numpy.array format
     """
     data = []
     labels = []
