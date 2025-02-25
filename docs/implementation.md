@@ -24,18 +24,30 @@ Orchestrate the flow of arguments parsing, path definition, data preprocessing, 
 
 ### Models
 Include python files implementing ML models, for example decision_tree.py. Each model must implement a `train` and a `evaluate` function 
+#### Train
 ```
-train(dataloader, save_dir, checkpoint_path)
+train(dataloader, save_dir, **args**)
 ```
 - **dataloader**: tuple of inputs, labels for sklearn models, or torch.utils.data.DataLoader for torch models
 - **save_dir**: the directory to save the trained model, handle by run.py
-- **checkpoint_path**: used by ANN (torch) models to resume checkpoint before training.
+- **args**: necessary arguments for a particular model, should be specified in config file under "model_args"
 
+##### Guide: 
+- To implement `train` for a new model, **dataloader** and **save_dir** input format must follow the description above. 
+- Other model-specific arguments can be passed through **args**, use global DEFAULT_ARGS (dict) to ensure the existent of arguments (see ann.py for example).
+- After training finished, the trained model must be saved using `utils.utils.save_pkl` or `torch.save` for later use.
+
+#### Evaluate
 ```
 evaluate(dataloader, save_path)
 ```
 - **dataloader**: the same as train
-- **save_path**: path to the saved model, handle by run.py
+- **saved_path**: path to the saved model, handle by run.py
+
+##### Guide:
+- To implement `train` for a new model, **dataloader** and **saved_path** input format must follow the description above. 
+- Must use **saved_path** to load model by `utils.utils.load_pkl` or `torch.load` (remember to handle the None case).
+- Any model-specific evaluation metrics should be implemented in `utils.testutils` and import before use.
 
 ### Utils
 Include dataset preprocessing, dataloading, and utilities
