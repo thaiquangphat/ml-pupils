@@ -1,23 +1,29 @@
 import argparse
 import importlib
-import torch
-import os
+import json
+import yaml
 from pathlib import Path
 from utils.dataloader import get_dataloader
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
 
+# function to load config.json file
+def load_config(filepath):
+    with open(filepath, "r") as f:
+        return yaml.safe_load(f)
+    
 # Define argument parser
 def parse_args():
     parser = argparse.ArgumentParser(description="Run ML models on image dataset.")
-    parser.add_argument("--model", type=str, required=True, help="Choose the model to run (e.g., decision_tree, ann).")
+    parser.add_argument("--config",type=str, help="Path to config JSON file")
+    parser.add_argument("--model", type=str, help="Choose the model to run (e.g., decision_tree, ann).")
     parser.add_argument("--train", action="store_true", help="Train the selected model.")
     parser.add_argument("--eval", action="store_true", help="Evaluate the selected model.")
     parser.add_argument("--dataset", type=str, default="masoudnickparvar/brain-tumor-mri-dataset", help="Kaggle dataset")
     parser.add_argument("--data_dir", type=str, default="dataset/raw", help="Path to dataset.")
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size for ANN.")
     parser.add_argument("--save_data_dir", type=str, default="dataset/processed", help="Path to saved data.")
-    parser.add_argument("--checkpoint", type=str, default=None, help="Specify checkpoint to load a model.")
+    parser.add_argument("--saved_path", type=str, default=None, help="Path to saved ML model.")
     parser.add_argument("--metrics", nargs="+", type=str, default="full", 
                         help="""List of eval metrics. 
                         Currently support [f1_score, precision_score, recall_score, accuracy_score, auc_score].
@@ -25,14 +31,26 @@ def parse_args():
                         """)
     return parser.parse_args()
 
+
+
 if __name__ == "__main__":
     args = parse_args()
+    
+    # load config file and update args with config
+    if args.config:
+        config = load_config(args.config)
+        args.__dict__.update(config) 
+    
+    # A model name is required, either pass by cli for mention in config file
+    if not args.model:
+        raise ValueError("No configuration for model found")
     
     # Ensure dataset exists
     data_dir = Path(args.data_dir)
     save_data_dir = Path(args.save_data_dir)  
     save_data_dir.mkdir(parents=True, exist_ok=True) 
 
+    # download directly from kaggle if not exist
     if not data_dir.exists():
         kaggle_download(args.dataset, data_dir)
 
@@ -56,27 +74,18 @@ if __name__ == "__main__":
     save_dir = Path(f"results/models/{args.model}")
     save_dir.mkdir(parents=True, exist_ok=True)
     
-    # If checkpoint is specified, override save path
-    checkpoint_path = None
-    if args.checkpoint:
-        checkpoint_path = save_dir / args.checkpoint
-
     # Training
-    # TODO: either split for different types of model (sklearn/torch)
-    #       or implement a more comprehensive train/eval func api 
-    
     if args.train:
         save_file = save_data_dir / f"train.npz"
         data_loader = get_dataloader(train_dir, save_path=save_file, batch_size=args.batch_size, for_torch="ann" in args.model)
-        train_func(data_loader, save_dir, checkpoint_path)
+        train_func(data_loader, save_dir, args.model_args)
 
     # Evaluation
     if args.eval:
         save_file = save_data_dir / f"test.npz"
-        if not checkpoint_path:
-            checkpoint_path = get_latest_model_path(save_dir)
+        saved_path = args.saved_path if args.saved_path else get_latest_model_path(save_dir)
         data_loader = get_dataloader(test_dir, save_path=save_file, batch_size=args.batch_size, for_torch="ann" in args.model)
-        y, y_preds, y_scores = eval_func(data_loader, checkpoint_path)
+        y, y_preds, y_scores = eval_func(data_loader, saved_path)
         print(metric_results(y, y_preds, y_scores, args.metrics))
 
     print("Execution completed.")

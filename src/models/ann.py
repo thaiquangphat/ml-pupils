@@ -7,6 +7,13 @@ from tqdm import tqdm
 from sklearn.metrics import accuracy_score
 from utils.utils import get_save_name
 
+# default arguments necessary for training ANN
+DEFAULT_ARGS = {
+    "epochs": 10,
+    "log_step": 1,
+    "checkpoint_path": None
+}
+
 class ANN(nn.Module):
     """Implement simple LeNet5 with batch norm"""
     def __init__(self, num_classes=4):
@@ -65,8 +72,10 @@ def load_checkpoint(model, optimizer, save_path):
         start_epoch = 0
     return start_epoch
 
-def train(dataloader, save_dir, checkpoint_path, num_epochs=10, log_step=1):
+def train(dataloader, save_dir, args): 
     """Train model with checkpointing"""
+    args = {**DEFAULT_ARGS, **args}
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = ANN().to(device)
     criterion = nn.CrossEntropyLoss()
@@ -75,13 +84,13 @@ def train(dataloader, save_dir, checkpoint_path, num_epochs=10, log_step=1):
     save_path = save_dir / get_save_name("ann", "pt")
     start_epoch = 0
     
-    if checkpoint_path:
-        start_epoch = load_checkpoint(model, optimizer, checkpoint_path)
-        save_path = checkpoint_path
+    if args["checkpoint_path"]:
+        start_epoch = load_checkpoint(model, optimizer, args["checkpoint_path"])
+        save_path = args["checkpoint_path"]
     
     print("ANN start training...")
     
-    for epoch in range(start_epoch, num_epochs):
+    for epoch in range(start_epoch, args["epochs"]):
         running_loss = 0
         for img, label in tqdm(dataloader):
             img, label = img.to(device), label.to(device)
@@ -95,22 +104,22 @@ def train(dataloader, save_dir, checkpoint_path, num_epochs=10, log_step=1):
             
             running_loss += loss.item()
         
-        if epoch % log_step == 0 or epoch == num_epochs - 1:
+        if epoch % args["log_step"] == 0 or epoch == args["epochs"] - 1:
             save_checkpoint(model, optimizer, epoch, save_path)
-            print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(dataloader):.4f}")
+            print(f"Epoch [{epoch+1}/{args["epochs"]}], Loss: {running_loss/len(dataloader):.4f}")
 
     print(f"ANN done training. Checkpoint saved at {save_path}")
 
-def evaluate(dataloader, save_path):
+def evaluate(dataloader, saved_path):
     """Evaluate the model using saved checkpoint"""
     model = ANN()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     
-    if os.path.exists(save_path):
-        checkpoint = torch.load(save_path)
+    if saved_path:
+        checkpoint = torch.load(saved_path)
         model.load_state_dict(checkpoint["model_state"])
-        print(f"Loaded model from {save_path}")
+        print(f"Loaded model from {saved_path}")
     else:
         print("No checkpoint found, evaluating with randomly initialized model.")
     
