@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument("--data_dir", type=str, default="dataset/raw", help="Path to dataset.")
     parser.add_argument("--save_data_dir", type=str, default="dataset/processed", help="Path to saved data.")
     parser.add_argument("--saved_path", type=str, default=None, help="Path to saved ML model.")
+    parser.add_argument("--model_args",type=json.loads, default={}, help="Model arguments")
     parser.add_argument("--metrics", nargs="+", type=str, default="full", 
                         help="""List of eval metrics. 
                         Currently support [f1_score, precision_score, recall_score, accuracy_score, auc_score].
