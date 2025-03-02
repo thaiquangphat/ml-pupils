@@ -63,4 +63,3 @@ Store running log and results
 
 
 ## Future improvement:
-- Using cross validation for training
