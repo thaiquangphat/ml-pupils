@@ -21,7 +21,6 @@ def parse_args():
     parser.add_argument("--eval", action="store_true", help="Evaluate the selected model.")
     parser.add_argument("--dataset", type=str, default="masoudnickparvar/brain-tumor-mri-dataset", help="Kaggle dataset")
     parser.add_argument("--data_dir", type=str, default="dataset/raw", help="Path to dataset.")
-    parser.add_argument("--batch_size", type=int, default=64, help="Batch size for ANN.")
     parser.add_argument("--save_data_dir", type=str, default="dataset/processed", help="Path to saved data.")
     parser.add_argument("--saved_path", type=str, default=None, help="Path to saved ML model.")
     parser.add_argument("--metrics", nargs="+", type=str, default="full", 

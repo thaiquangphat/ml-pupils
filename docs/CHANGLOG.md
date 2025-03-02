@@ -20,3 +20,13 @@
 ### Added
 - Handle argument parsing with configuration file.
 - Add default arguments for ann.py
+
+## [1.0.1] - 03-03-2025
+### Modified: 
+- Move dataloader to model scope, run.py only provide ImageDataset object
+- Change `get_dataloader` to `get_dataset` to accomodate the above change.
+- Move config files to a separate folder `src/config/`
+- Modify docs for `train` and `evaluate` implementation
+
+### Added
+- Add validation for ann.py checkpointing and early stopping
