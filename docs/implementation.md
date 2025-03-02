@@ -1,0 +1,65 @@
+# Implementation
+
+## Repository structure
+```
+ml-pupils
+|── docs
+|── notebooks
+|──src
+    │── dataset
+    │── models
+    │── results/models
+    │── utils
+|── tests
+|── requirements.txt 
+```
+
+## Details of `src` directory:
+### run.py
+Orchestrate the flow of arguments parsing, path definition, data preprocessing, training and evaluating.
+
+### Dataset
+- **raw/**: Save downloaded dataset from kaggle. Include 2 subdirectories `Training/` and `Testing/`, each contain 4 sub-sub-directories corresponding to classes of images.
+- **processed/**: Save processed data in `.npz` format. Newly created dataset will be processed and save as `train.npz` and `test.npz`.
+
+### Models
+Include python files implementing ML models, for example decision_tree.py. Each model must implement a `train` and a `evaluate` function 
+#### Train
+```
+train(dataloader, save_dir, **args**)
+```
+- **dataloader**: tuple of inputs, labels for sklearn models, or torch.utils.data.DataLoader for torch models
+- **save_dir**: the directory to save the trained model, handle by run.py
+- **args**: necessary arguments for a particular model, should be specified in config file under "model_args"
+
+##### Guide: 
+- To implement `train` for a new model, **dataloader** and **save_dir** input format must follow the description above. 
+- Other model-specific arguments can be passed through **args**, use global DEFAULT_ARGS (dict) to ensure the existent of arguments (see ann.py for example).
+- After training finished, the trained model must be saved using `utils.utils.save_pkl` or `torch.save` for later use.
+
+#### Evaluate
+```
+evaluate(dataloader, save_path)
+```
+- **dataloader**: the same as train
+- **saved_path**: path to the saved model, handle by run.py
+
+##### Guide:
+- To implement `train` for a new model, **dataloader** and **saved_path** input format must follow the description above. 
+- Must use **saved_path** to load model by `utils.utils.load_pkl` or `torch.load` (remember to handle the None case).
+- Any model-specific evaluation metrics should be implemented in `utils.testutils` and import before use.
+
+### Utils
+Include dataset preprocessing, dataloading, and utilities
+- **preprocessing.py**: `process_image` handle the load and preprocess of images into numpy.array
+- **dataloader.py**: encapsulate data in `ImageDataset`, use `get_dataloader` to fetch the data. When an instance of ImageDataset is created, the images and labels will be processed by `preprocessing.process_image` and save to `dataset/processed` as .npz file  
+- **testutils.py**: include function for testing and evaluating on different metrics
+- **utils.py**: other utilities
+
+### Results
+Store running log and results
+- **models/**: store saved models in their corresponding directories.
+
+
+## Future improvement:
+- Using cross validation for training
