@@ -4,12 +4,12 @@ from sklearn.tree import DecisionTreeClassifier
 from utils.utils import save_pkl, load_pkl, get_save_name
 from utils.testutils import print_tree_details
 
-def train(dataloader, save_dir, args):
+def train(dataset, save_dir, args):
     """Train a Decision Tree and save the model."""
     print("Decision tree start training...")
     os.makedirs(save_dir, exist_ok=True)
     
-    X, y = dataloader
+    X, y = dataset.images, dataset.labels
     X = X.reshape(X.shape[0], -1)
     
     model = DecisionTreeClassifier(criterion='gini', random_state=42)
@@ -21,12 +21,12 @@ def train(dataloader, save_dir, args):
     print(f"Model saved at {save_path}")
     
 
-def evaluate(dataloader, saved_path, args):
+def evaluate(dataset, saved_path, args):
     """Load the latest or specified Decision Tree model and evaluate it."""
     if not saved_path or not os.path.exists(saved_path):
         raise FileNotFoundError("Model not found. Please train first.")
 
-    X, y = dataloader
+    X, y = dataset.images, dataset.labels
     X = X.reshape(X.shape[0], -1)
     
     model = load_pkl(saved_path)

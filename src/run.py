@@ -3,7 +3,7 @@ import importlib
 import json
 import yaml
 from pathlib import Path
-from utils.dataloader import get_dataloader
+from utils.dataloader import get_dataset
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     
     # load config file and update args with config
     if args.config:
-        config = load_config(args.config)
+        config = load_config(Path("config") /args.config)
         args.__dict__.update(config) 
     
     # A model name is required, either pass by cli for mention in config file
@@ -77,15 +77,15 @@ if __name__ == "__main__":
     # Training
     if args.train:
         save_file = save_data_dir / f"train.npz"
-        data_loader = get_dataloader(train_dir, save_path=save_file, batch_size=args.batch_size, for_torch="ann" in args.model)
-        train_func(data_loader, save_dir, args.model_args)
+        dataset = get_dataset(train_dir, save_path=save_file)
+        train_func(dataset, save_dir, args.model_args)
 
     # Evaluation
     if args.eval:
         save_file = save_data_dir / f"test.npz"
         saved_path = args.saved_path if args.saved_path else get_latest_model_path(save_dir)
-        data_loader = get_dataloader(test_dir, save_path=save_file, batch_size=args.batch_size, for_torch="ann" in args.model)
-        y, y_preds, y_scores = eval_func(data_loader, saved_path)
+        dataset = get_dataset(test_dir, save_path=save_file)
+        y, y_preds, y_scores = eval_func(dataset, saved_path, args.model_args)
         print(metric_results(y, y_preds, y_scores, args.metrics))
 
     print("Execution completed.")

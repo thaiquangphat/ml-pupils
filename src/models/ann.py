@@ -2,16 +2,19 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.nn.functional import softmax
+from torch.utils.data import DataLoader, random_split
 import os
 from tqdm import tqdm
-from sklearn.metrics import accuracy_score
 from utils.utils import get_save_name
 
 # default arguments necessary for training ANN
 DEFAULT_ARGS = {
     "epochs": 10,
     "log_step": 1,
-    "checkpoint_path": None
+    "split": [0.9,0.1],
+    "checkpoint_path": None,
+    "patience": 10,
+    "batch_size": 64
 }
 
 class ANN(nn.Module):
@@ -72,7 +75,7 @@ def load_checkpoint(model, optimizer, save_path):
         start_epoch = 0
     return start_epoch
 
-def train(dataloader, save_dir, args): 
+def train(dataset, save_dir, args): 
     """Train model with checkpointing"""
     args = {**DEFAULT_ARGS, **args}
     
@@ -88,11 +91,19 @@ def train(dataloader, save_dir, args):
         start_epoch = load_checkpoint(model, optimizer, args["checkpoint_path"])
         save_path = args["checkpoint_path"]
     
+    train_set, val_set = random_split(dataset, [args["split"][0],args["split"][1]])
+    trainloader = DataLoader(train_set, batch_size=args["batch_size"])
+    valloader = DataLoader(val_set, batch_size=args["batch_size"])
+
     print("ANN start training...")
     
     for epoch in range(start_epoch, args["epochs"]):
         running_loss = 0
-        for img, label in tqdm(dataloader):
+        val_loss = 0
+        best_val_loss = 1e10
+        
+        model.train()
+        for img, label in tqdm(trainloader):
             img, label = img.to(device), label.to(device)
             img = img.unsqueeze(1)
             
@@ -104,14 +115,36 @@ def train(dataloader, save_dir, args):
             
             running_loss += loss.item()
         
-        if epoch % args["log_step"] == 0 or epoch == args["epochs"] - 1:
-            save_checkpoint(model, optimizer, epoch, save_path)
-            print(f"Epoch [{epoch+1}/{args["epochs"]}], Loss: {running_loss/len(dataloader):.4f}")
+        model.eval()
+        for img,label in tqdm(valloader):
+            img, label = img.to(device), label.to(device)
+            img = img.unsqueeze(1)
+            output = model.forward(img)
+            loss = criterion(output,label)
+            
+            val_loss += loss.item()
+            
+            if val_loss <= best_val_loss:
+                best_val_loss = val_loss
+                stopping_step = 0
+                save_checkpoint(model, optimizer, epoch, save_path)
+            else:
+                stopping_step += 1
+            
+            if stopping_step > args["patience"]:
+                print(f"Model stop training at epoch {epoch+1}. Val loss: {val_loss/len(valloader):.4f}")
+                break
+            
+        print(f"Epoch [{epoch+1}/{args["epochs"]}] - Train loss: {running_loss/len(trainloader):.4f} - Val loss: {val_loss/len(valloader):.4f}")
 
-    print(f"ANN done training. Checkpoint saved at {save_path}")
+    print(f"ANN done training")
 
-def evaluate(dataloader, saved_path):
+
+
+def evaluate(dataset, saved_path, args):
     """Evaluate the model using saved checkpoint"""
+    args = {**DEFAULT_ARGS, **args}
+    
     model = ANN()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -128,6 +161,7 @@ def evaluate(dataloader, saved_path):
     all_labels = []
     all_scores = []
     
+    dataloader = DataLoader(dataset,batch_size=args["batch_size"])
     with torch.no_grad():
         for img, label in dataloader:
             img, label = img.to(device), label.to(device)

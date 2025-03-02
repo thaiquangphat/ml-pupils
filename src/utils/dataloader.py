@@ -19,10 +19,15 @@ def save_numpy(save_path, X, y):
     np.savez_compressed(save_path, X=X, y=y)
     
 class ImageDataset(Dataset):
-    def __init__(self, image_dir, save_path, img_size=IMG_SIZE):
+    def __init__(self, image_dir=None, save_path=None, X=None, y=None, img_size=IMG_SIZE):
         """Initialize dataset: Load and preprocess images."""
-        self.images, self.labels = preprocess_images(image_dir, img_size)
-        save_numpy(save_path, self.images, self.labels)
+        if X is not None and y is not None:
+            self.images, self.labels = X,y
+        elif image_dir:
+            self.images, self.labels = preprocess_images(image_dir, img_size)
+            save_numpy(save_path, self.images, self.labels)
+        else:
+            raise ValueError("Either image_dir not None or X,y not None.")
         
     def __len__(self):
         return len(self.images)
@@ -37,37 +42,24 @@ class ImageDataset(Dataset):
         return image, label
 
 
-def get_dataloader(image_dir, save_path=None, batch_size=64, img_size=IMG_SIZE, for_torch=False):
-    """Returns DataLoader for ANN models or NumPy arrays for ML models.
+def get_dataset(image_dir, save_path=None,img_size=IMG_SIZE):
+    """Load saved numpy data into ImageDataset or initialize a new ImageDataset
     Parameters: 
         image_dir: the directory contain subdirectories for classes of images
         save_path: if save_path is provided and data exists, load it. Otherwise, create a new dataset and save it.
-        batch_size: number of sample in a batch, for Dataloader. default: 64
-        img_size: for resizing image. default: (256,256)
-        for_torch: for sklearn models or for torch models
     Return:
-        if for_torch = true return a torch.utils.data.Dataloader, 
-        otherwise return a tuple of (images, labels) in numpy.array format
+        ImageDataset() store images and labels
     """
     if save_path:
         X, y = get_saved_numpy(save_path)
 
         if X is not None and y is not None:
             print(f"Loaded saved dataset from {save_path}")
-            if for_torch:
-                dataset = torch.utils.data.TensorDataset(
-                    torch.tensor(X, dtype=torch.float32), 
-                    torch.tensor(y, dtype=torch.long)
-                )
-                return DataLoader(dataset, batch_size=batch_size, shuffle=True)
-            return X, y
+            return ImageDataset(image_dir, save_path, X=X,y=y, img_size=img_size)
 
     # If no saved dataset found, preprocess images
     print("No saved dataset found. Creating new dataset...")
-    dataset = ImageDataset(image_dir, save_path, img_size)
+    dataset = ImageDataset(image_dir, save_path, img_size=img_size)
     print(f"Dataset saved to {save_path}")
     
-    if for_torch:
-        return DataLoader(dataset, batch_size=batch_size, shuffle=True)
-    else:
-        return dataset.images, dataset.labels
+    return dataset

@@ -1,8 +1,0 @@
-model: "ann"
-batch_size: 32
-
-model_args:
-  epochs: 8
-
-metrics: ["accuracy_score", "auc_score"]
-
