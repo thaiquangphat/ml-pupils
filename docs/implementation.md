@@ -6,10 +6,11 @@ ml-pupils
 |── docs
 |── notebooks
 |──src
-    │── dataset
-    │── models
-    │── results/models
-    │── utils
+    |── config/
+    │── dataset/
+    │── models/
+    │── results/models/
+    │── utils/
 |── tests
 |── requirements.txt 
 ```
@@ -17,6 +18,9 @@ ml-pupils
 ## Details of `src` directory:
 ### run.py
 Orchestrate the flow of arguments parsing, path definition, data preprocessing, training and evaluating.
+
+### Config
+.yaml config files should be stored here.
 
 ### Dataset
 - **raw/**: Save downloaded dataset from kaggle. Include 2 subdirectories `Training/` and `Testing/`, each contain 4 sub-sub-directories corresponding to classes of images.
