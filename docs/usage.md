@@ -40,7 +40,7 @@ metrics: ["accuracy_score", "auc_score"]
 This will train the ANN model on 100 epochs with logging every 10 epochs.
 
 ## Bayesian Network Update
-- Dataloader: extracted features from preprocessed npz files, save to directory feature_output
+- Dataloader: extracted features from preprocessed npz files, save to directory feature_output (must have the npz files first, so run other models before this)
 - New visualization feature for network and feature correlation
 - Option `naive`: substitute bayesian network to naive bayes (a special type of bayesian network)
 - Challenge: feature extraction is weak thus the model has low accuracy.
