@@ -5,11 +5,17 @@ from pgmpy.models import BayesianNetwork
 from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator
 from pgmpy.inference import VariableElimination
 from utils.utils import save_pkl, load_pkl, get_save_name
+from utils.feature_extraction import segment_and_extract_features
+from tqdm import tqdm
+from pathlib import Path
 
 DEFAULT_ARGS = {
     "discretize_features": True,
     "bins": 5,
-    "estimator": "mle"  # 'mle' or 'bayes'
+    "estimator": "mle",
+    "naive": False,
+    "chunk_size": 1000,
+    "output_dir": "feature_output"
 }
 
 def build_bayesian_network(naive=False):
@@ -49,12 +55,7 @@ def _discretize_data(df, bins=5):
     df_disc = df.copy()
     
     for col in numerical_cols:
-        if col in df.columns:
-            # Handle zero or very small values that might cause issues
-            if df[col].min() == df[col].max():
-                df_disc[col] = '0'
-            else:
-                df_disc[col] = pd.qcut(df[col], q=bins, labels=False, duplicates='drop')
+        df_disc[col] = pd.qcut(df_disc[col], q=bins, labels=False, duplicates='drop')
     
     # Ensure all columns are strings for pgmpy
     for col in df_disc.columns:
@@ -62,25 +63,94 @@ def _discretize_data(df, bins=5):
         
     return df_disc
 
-def train(features_path, save_dir, args):
+def extract_features_from_imagedataset(dataset, output_dir="feature_output", split_name="train", chunk_size=1000):
     """
-    Train a Bayesian Network model on extracted features.
+    Extract features directly from an ImageDataset object.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    features_path = os.path.join(output_dir, f"features_{split_name}.csv")
+    
+    try:
+        if not hasattr(dataset, 'images') or not hasattr(dataset, 'labels'):
+            raise ValueError("Dataset object must have 'images' and 'labels' attributes")
+        
+        images = dataset.images
+        labels = dataset.labels
+        
+        print(f"Processing {len(images)} images from ImageDataset")
+        features_list = []
+        chunk_counter = 0
+        
+        # Class mapping
+        class_names = ["notumor", "glioma", "meningioma", "pituitary"]
+        
+        # Process each image with tqdm progress bar
+        for idx in tqdm(range(len(images)), desc="Extracting features", unit="img"):
+            img = images[idx]
+            label_idx = int(labels[idx])
+            
+            # Map label index to name
+            label = class_names[label_idx] if label_idx < len(class_names) else f"class_{label_idx}"
+            
+            # Extract features
+            is_tumor = (label != "notumor")
+            feats = segment_and_extract_features(img, is_tumor)
+            feats["label"] = label
+            feats["split"] = split_name
+            features_list.append(feats)
+            
+            # Save in chunks to manage memory
+            if len(features_list) >= chunk_size or idx == len(images) - 1:
+                df_chunk = pd.DataFrame(features_list)
+                
+                mode = 'w' if chunk_counter == 0 else 'a'
+                header = True if chunk_counter == 0 else False
+                df_chunk.to_csv(features_path, mode=mode, header=header, index=False)
+                
+                features_list = []
+                chunk_counter += 1
+        
+        return features_path
+        
+    except Exception as e:
+        print(f"Error extracting features: {str(e)}")
+        return None
+
+def train(dataset, save_dir, model_args=None):
+    """
+    Train a Bayesian Network model on the dataset.
     
     Parameters:
     -----------
-    features_path : str or Path
-        Path to CSV file with extracted features
+    dataset : ImageDataset
+        Dataset object containing images and labels
     save_dir : Path
         Directory to save the trained model
-    args : dict
+    model_args : dict
         Model-specific arguments
     """
-    args = {**DEFAULT_ARGS, **args}
-    naive = args.get("naive", False)  # Get naive parameter with default False
-
+    # Merge default args with provided args
+    if model_args is None:
+        model_args = {}
+    args = {**DEFAULT_ARGS, **model_args}
+    
+    # Extract features from the dataset
+    features_path = extract_features_from_imagedataset(
+        dataset, 
+        output_dir=args.get("output_dir", "feature_output"),
+        split_name="train",
+        chunk_size=args.get("chunk_size", 1000)
+    )
+    
+    if features_path is None:
+        raise ValueError("Feature extraction failed")
+    
+    # Get naive parameter
+    naive = args.get("naive", False)
+    
     # Load data
     df = pd.read_csv(features_path)
-    train_df = df[df['split'] == 'train']
+    train_df = df[df['split'] == 'train']  # Just in case
     
     feature_cols = ['tumor_present', 'area', 'perimeter', 'mean_intensity', 
                   'eccentricity', 'solidity', 'contrast', 'homogeneity']
@@ -94,177 +164,51 @@ def train(features_path, save_dir, args):
     if args["discretize_features"]:
         model_df = _discretize_data(model_df, bins=args["bins"])
         
-    # Build and train model
+    # Build model with the naive parameter
     model = build_bayesian_network(naive=naive)
     
-    # IMPORTANT: Store the discretization parameters with the model
+    # Store the discretization parameters with the model
     model.discretization_params = {
         "bins": args["bins"],
         "discretize_features": args["discretize_features"],
-        "naive": naive
+        "naive": naive,
+        "output_dir": args.get("output_dir", "feature_output"),
+        "chunk_size": args.get("chunk_size", 1000)
     }
     
-    # Use appropriate estimator
+    # Estimate parameters
     if args["estimator"] == "mle":
+        print("Using Maximum Likelihood Estimator...")
         model.fit(model_df, estimator=MaximumLikelihoodEstimator)
+    elif args["estimator"] == "bayes":
+        print("Using Bayesian Estimator...")
+        model.fit(model_df, estimator=BayesianEstimator, prior_type="BDeu")
     else:
-        model.fit(model_df, estimator=BayesianEstimator, prior_type="BDeu", pseudo_counts=1)
+        raise ValueError(f"Unknown estimator: {args['estimator']}")
     
-    print("CPTs after training:")
-    for node in model.nodes():
-        print(f"Node: {node}")
-        print(model.get_cpds(node))
-        # Verify that probabilities sum to 1
-        if node == "tumor_present":
-            cpd = model.get_cpds(node)
-            print("Values sum to:", cpd.values.sum())
-            print("Values shape:", cpd.values.shape)
+    # Print CPDs
+    print("CPDs after training:")
+    for cpd in model.get_cpds():
+        print(f"Node: {cpd.variable}")
+        print(cpd)
     
     # Save model
-    os.makedirs(save_dir, exist_ok=True)
-    save_path = save_dir / get_save_name("bayes_net", "pkl")
+    save_path = Path(save_dir) / get_save_name("bayes_net", "pkl")
     save_pkl(model, save_path)
     print(f"Model saved at {save_path}")
-    
     return model
 
-def evaluate(features_path, saved_path):
-    """
-    Evaluate Bayesian Network model on test data.
-    
-    Parameters:
-    -----------
-    features_path, str or Path: Path to CSV file with extracted features
-    saved_path, str or Path: Path to saved model file
-        
-    Returns:
-    --------
-    y_true : list: True labels
-    y_pred : list: Predicted labels
-    y_scores : list: Probability scores for each class
-    """
-    if not saved_path or not os.path.exists(saved_path):
-        raise FileNotFoundError("Model not found. Please train first.")
-    
-    model = load_pkl(saved_path)
-    test_df = pd.read_csv(features_path)
-
-    # Apply the same discretization to test data
-    if hasattr(model, 'discretization_params') and model.discretization_params['discretize_features']:
-        # Rename 'label' to 'tumor_type' for consistency with model
-        test_df_copy = test_df.copy()
-        test_df_copy.rename(columns={'label': 'tumor_type'}, inplace=True)
-        test_df_copy = _discretize_data(test_df_copy, bins=model.discretization_params['bins'])
-        # Rename back
-        test_df_copy.rename(columns={'tumor_type': 'label'}, inplace=True)
-        test_df = test_df_copy
-    
-    
-    # Get the set of unique labels
-    unique_labels = sorted(list(test_df['label'].unique()))
-    
-    print(f"Evaluating on {len(test_df)} test samples with {len(unique_labels)} classes")
-    
-    # Get ground truth labels
-    y_true = test_df['label'].tolist()
-    
-    # Make predictions
-    y_pred = []
-    y_scores = []
-    
-    # Initialize the inference engine
-    try:
-        inference = VariableElimination(model)
-    except Exception as e:
-        print(f"Error initializing inference engine: {e}")
-        # Fallback to most common class
-        most_common = test_df['label'].value_counts().idxmax()
-        y_pred = [most_common] * len(test_df)
-        y_scores = [[1.0 if l == most_common else 0.0 for l in unique_labels]] * len(test_df)
-        return y_true, y_pred, y_scores
-    
-    # Process each sample
-    for idx, row in test_df.iterrows():
-        try:
-            # Prepare evidence - convert all feature values to strings
-            evidence = {}
-            for col in ['tumor_present', 'area', 'perimeter', 'mean_intensity', 
-                      'eccentricity', 'solidity', 'contrast', 'homogeneity']:
-                if col in row:
-                    evidence[col] = str(row[col])
-            
-            # Try using the inference engine, fallback to manual calculation if it fails
-            try:
-                # For regular BN, try with inference engine first
-                result = inference.query(["tumor_type"], evidence=evidence)
-                
-                # Extract probabilities for each label
-                probs = np.zeros(len(unique_labels))
-                
-                # Map 'label' to 'tumor_type' in state_names
-                for i, label in enumerate(unique_labels):
-                    if label in result.state_names["tumor_type"]:
-                        idx = result.state_names["tumor_type"].index(label)
-                        probs[i] = result.values[idx]
-                        
-                # Normalize if needed
-                if np.sum(probs) > 0:
-                    probs = probs / np.sum(probs)
-                    
-            except Exception as e:
-                print(f"Inference failed for sample {idx}, using manual calculation: {e}")
-                probs = calculate_probabilities_manually(model, evidence, unique_labels)
-                
-            # Get prediction
-            pred_idx = np.argmax(probs)
-            y_pred.append(unique_labels[pred_idx])
-            y_scores.append(probs)
-            
-        except Exception as e:
-            print(f"Error predicting sample {idx}: {e}")
-            # Use most common class as fallback
-            most_common = test_df['label'].value_counts().idxmax()
-            y_pred.append(most_common)
-            probs = np.zeros(len(unique_labels))
-            probs[unique_labels.index(most_common)] = 1.0
-            y_scores.append(probs)
-    
-    # Final consistency check
-    if len(y_pred) == 0:
-        print("Warning: No predictions made. Using default values.")
-        most_common = test_df['label'].value_counts().idxmax()
-        y_pred = [most_common] * len(y_true)
-        y_scores = [[1.0 if l == most_common else 0.0 for l in unique_labels]] * len(y_true)
-    
-    print(f"Successfully generated {len(y_pred)} predictions")
-    
-    return y_true, y_pred, y_scores
-
-# Fallback function
 def calculate_probabilities_manually(model, evidence, unique_labels):
     """
-    Calculate probabilities manually using Bayes' rule.
-    
-    Parameters:
-    -----------
-    model : BayesianNetwork
-        Trained Bayesian Network model
-    evidence : dict
-        Dictionary of evidence variables
-    unique_labels : list
-        List of unique label values
-        
-    Returns:
-    --------
-    probs : list
-        List of probabilities for each label
+    Calculate probabilities manually for both Naive and regular Bayesian networks.
+    This is a fallback method when inference engine fails.
     """
     probs = []
     
     # Get the CPD for tumor_type
     tumor_type_cpd = model.get_cpds('tumor_type')
     
-    # Check if we have a naive structure (class -> features) or regular (features -> class)
+    # Check if we have a naive structure
     is_naive = hasattr(model, 'discretization_params') and model.discretization_params.get('naive', False)
     
     # Compute p(tumor_type | evidence) for each label
@@ -284,12 +228,14 @@ def calculate_probabilities_manually(model, evidence, unique_labels):
                         feature_cpd = model.get_cpds(feature)
                         
                         # Find the right probability in the CPD
-                        if value in feature_cpd.state_names[feature] and label in feature_cpd.state_names['tumor_type']:
+                        if value in feature_cpd.state_names[feature] and 'tumor_type' in feature_cpd.state_names:
                             value_idx = feature_cpd.state_names[feature].index(value)
                             label_idx = feature_cpd.state_names['tumor_type'].index(label)
+                            
+                            # Get the right probability 
                             prob *= feature_cpd.values[value_idx, label_idx]
             else:
-                # For regular Bayesian network: P(C|F1,F2,...) directly from CPD
+                # For regular Bayesian network: use conditional probabilities
                 # Get the indices for this specific combination of evidence
                 evidence_indices = {}
                 
@@ -297,7 +243,7 @@ def calculate_probabilities_manually(model, evidence, unique_labels):
                 for parent in model.get_parents('tumor_type'):
                     if parent in evidence:
                         parent_cpd = model.get_cpds('tumor_type')
-                        if parent in parent_cpd.variables and evidence[parent] in parent_cpd.state_names[parent]:
+                        if parent in parent_cpd.state_names and evidence[parent] in parent_cpd.state_names[parent]:
                             parent_idx = parent_cpd.state_names[parent].index(evidence[parent])
                             evidence_indices[parent] = parent_idx
                 
@@ -313,7 +259,10 @@ def calculate_probabilities_manually(model, evidence, unique_labels):
                             index_list.append(0)
                     
                     # Get the probability from the CPD
-                    prob = tumor_type_cpd.values[label_idx, tuple(index_list)]
+                    if index_list:
+                        prob = tumor_type_cpd.values[label_idx, tuple(index_list)]
+                    else:
+                        prob = tumor_type_cpd.values[label_idx]
                 else:
                     # No parent values in evidence, use marginal
                     prob = tumor_type_cpd.values[label_idx]
@@ -330,3 +279,148 @@ def calculate_probabilities_manually(model, evidence, unique_labels):
         probs = [1.0/len(unique_labels)] * len(unique_labels)
     
     return probs
+
+def evaluate(dataset, saved_path, model_args=None):
+    """
+    Evaluate Bayesian Network model on test data.
+    """
+    if model_args is None:
+        model_args = {}
+    
+    # Load the model
+    model = load_pkl(saved_path)
+    
+    # Get model parameters from the saved model
+    output_dir = model.discretization_params.get("output_dir", "feature_output")
+    chunk_size = model.discretization_params.get("chunk_size", 1000)
+    naive = model.discretization_params.get("naive", False)
+    
+    # Extract features from the test dataset
+    features_path = extract_features_from_imagedataset(
+        dataset, 
+        output_dir=output_dir,
+        split_name="test",
+        chunk_size=chunk_size
+    )
+    
+    if features_path is None:
+        raise ValueError("Feature extraction failed")
+    
+    # Load test data
+    test_df = pd.read_csv(features_path)
+    
+    # Initialize inference engine
+    inference = VariableElimination(model)
+    
+    # Get unique labels
+    unique_labels = list(test_df['label'].unique())
+    y = []
+    y_pred = []
+    y_scores = []
+
+    # Process each sample
+    for idx, row in test_df.iterrows():
+        try:
+            # Record the true label
+            y.append(row['label'])
+            
+            # Convert all feature values to strings (needed by pgmpy)
+            evidence = {}
+            for col in ['tumor_present', 'area', 'perimeter', 'mean_intensity', 
+                      'eccentricity', 'solidity', 'contrast', 'homogeneity']:
+                if col in row:
+                    evidence[col] = str(row[col])
+
+            if naive:
+                probs = calculate_probabilities_manually(model, evidence, unique_labels)
+            else:
+                try:
+                    result = inference.query(["tumor_type"], evidence=evidence)
+                    probs = [result.values[result.state_names["tumor_type"].index(label)] 
+                            if label in result.state_names["tumor_type"] else 0 
+                            for label in unique_labels]
+                    
+                    # Normalize if needed
+                    if sum(probs) > 0:
+                        probs = [p/sum(probs) for p in probs]
+                    else:
+                        probs = [1.0/len(unique_labels)] * len(unique_labels)
+                except Exception as e:
+                    # print(f"Inference failed for sample {idx}, falling back to manual: {e}")
+                    probs = calculate_probabilities_manually(model, evidence, unique_labels)
+                    
+            # Get prediction
+            pred_idx = np.argmax(probs)
+            y_pred.append(unique_labels[pred_idx])
+            y_scores.append(probs)
+            
+        except Exception as e:
+            # print(f"Error processing sample {idx}: {str(e)}")
+            # Use most common class as fallback
+            most_common = test_df['label'].value_counts().idxmax()
+            y_pred.append(most_common)
+            probs = np.zeros(len(unique_labels))
+            probs[unique_labels.index(most_common)] = 1.0
+            y_scores.append(probs)
+    
+    # Convert scores to numpy array with shape (n_samples, n_classes)
+    y_scores = np.array(y_scores)
+    
+    return y, y_pred, y_scores
+
+def visualize(saved_path=None, model=None, args=None):
+    """
+    Visualize Bayesian Network model.
+    
+    Parameters:
+    -----------
+    saved_path : str or Path, optional
+        Path to the saved model
+    model : BayesianNetwork, optional
+        Already loaded model instance
+    args : dict, optional
+        Visualization arguments
+    """
+    from utils.visualization import visualize_bayesian_network, visualize_feature_relations
+    
+    # Load model if not provided
+    if model is None and saved_path:
+        from utils.utils import load_pkl
+        model = load_pkl(saved_path)
+    
+    if model is None:
+        print("No model available for visualization")
+        return
+        
+    # Get visualization parameters
+    if args is None:
+        args = {}
+        
+    viz_config = args.get("visualization", {})
+    if not isinstance(viz_config, dict):
+        viz_config = {}
+        
+    # Check if visualization is enabled
+    if not viz_config.get("enabled", False):
+        return
+        
+    viz_type = viz_config.get("type", "network")
+    output_file = viz_config.get("output_file", None)
+    show_viz = viz_config.get("show", False)
+    
+    # Create output directory if needed
+    if output_file:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    
+    # Visualize based on type
+    if viz_type == "network":
+        visualize_bayesian_network(model, output_file=output_file, show=show_viz)
+    elif viz_type == "correlation":
+        output_dir = args.get('output_dir', 'feature_output')
+        features_path = os.path.join(output_dir, "features_train.csv")
+        if os.path.exists(features_path):
+            visualize_feature_relations(features_path=features_path, output_file=output_file, show=show_viz)
+        else:
+            print(f"Feature file not found at {features_path}. Cannot visualize correlations.")
+    else:
+        print(f"Unknown visualization type: {viz_type}")
