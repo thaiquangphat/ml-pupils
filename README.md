@@ -38,9 +38,48 @@ For this study, we will be utilizing the [Brain Tumor MRI Dataset](https://www.k
 
 ## Decison Tree
 
+The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
+
+For more details about implementation, please visit this [link](src/models/decision_tree.py)
+
 ## Artificial Neural Network (ANN)
 
+The implemented artificial neural network (ANN) follows a modified LeNet-5 architecture, designed for image classification. It consists of two main components: the feature extraction and classification layers. The feature extraction component includes two convolutional layers: the first layer applies six 5×5 filters with a stride of 1 and padding of 2, followed by an average pooling layer that reduces the spatial dimensions by a factor of two. The second convolutional layer applies sixteen 5×5 filters, followed by another average pooling operation. The classification component consists of three fully connected layers: the first linear layer maps the flattened feature maps (16 × 62 × 62) to 120 neurons, followed by a ReLU activation. The second layer further reduces the representation to 84 neurons with another ReLU activation. Finally, the last fully connected layer outputs logits corresponding to the number of target classes. The network uses softmax activation during inference for class probability estimation. The model is trained using Adam optimization and cross-entropy loss, with support for checkpointing and early stopping to improve generalization and efficiency.
+
+For more details about implementation, please visit this [link](src/models/ann.py)
+
 ## Naive Bayesian
+
+## Bayesian Network and Naive Bayes
+
+The Bayesian Network and Naive Bayes implementations leverage probabilistic graphical models to classify brain tumor images using extracted features rather than raw pixel data.
+
+### Feature Extraction
+
+Images are processed through segmentation to extract meaningful features including:
+
+- Geometric properties: area, perimeter, eccentricity, solidity
+- Intensity features: mean intensity, contrast, homogeneity
+  This feature extraction approach reduces dimensionality while preserving discriminative information
+
+### Model Structure
+
+- Bayesian Network: Implements a directed acyclic graph where features are connected to the tumor type classification
+- Naive Bayes: Available as a special configuration where all features are conditionally independent given the tumor type class
+- Implemented using the pgmpy library for probabilistic graphical models
+- Features automatic discretization of continuous values (configurable number of bins)
+- Supports different parameter estimation methods: Maximum Likelihood Estimation (MLE) and Bayesian Estimation with Bayesian Dirichlet equivalent uniform prior
+
+### Visualization
+
+- Network structure visualization shows relationships between variables
+- Feature correlation analysis helps understand dependencies between extracted features
+
+### Performance
+
+- Processing in chunks allows handling of large datasets with limited memory
+- Includes fallback inference mechanisms when standard inference fails
+- Custom probability calculation for both model types ensures robust prediction
 
 ## Genetic Algorithm (GA)
 
