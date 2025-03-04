@@ -48,7 +48,9 @@ The implemented artificial neural network (ANN) follows a modified LeNet-5 archi
 
 For more details about implementation, please visit this [link](src/models/ann.py)
 
-## Naive Bayesian
+## Genetic Algorithm (GA)
+
+For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
 
 ## Bayesian Network and Naive Bayes
 
@@ -81,9 +83,7 @@ Images are processed through segmentation to extract meaningful features includi
 - Includes fallback inference mechanisms when standard inference fails
 - Custom probability calculation for both model types ensures robust prediction
 
-## Genetic Algorithm (GA)
-
-## Bayesian Network
+For more details about implementation, please visit this [link](src/models/bayes_net.py)
 
 ## Support Vector Machine (SVM)
 
