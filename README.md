@@ -22,9 +22,9 @@ Machine model our team focuses on include:
 
 - [Decision Tree](#decison-tree)
 - [Aritificial Neural Network (ANN)](#artificial-neural-network-ann)
-- [Naive Bayesian](#naive-bayesian)
+- [Naive Bayes](#naive-bayes)
 - [Genetic Algorithm (GA)](#genetic-algorithm-ga)
-- [Bayesian Network](#bayesian-network)
+- [Bayes Network](#bayes-network-and-naive-bayes)
 - [Support Vector Machine (SVM)](#support-vector-machine-svm)
 - [Dimension Reduced LDA or PCA](#dimension-reduced-lda-or-pca)
 - [Bagging and Boosting](#bagging-and-boosting)
@@ -52,7 +52,13 @@ For more details about implementation, please visit this [link](src/models/ann.p
 
 For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
 
-## Bayesian Network and Naive Bayes
+## Naive Bayes
+
+The Naïve Bayes model implemented in this project follows the Gaussian Naïve Bayes (GNB) classification technique, a probabilistic model based on Bayes' theorem with the assumption of feature independence. Each pixel in the input image is treated as an independent feature, and the model estimates the probability that an image belongs to a specific tumor type. Since pixel values are continuous and range from 0 to 255, the Gaussian distribution is chosen to model the likelihood of the features, making it suitable for real-valued inputs. Unlike Bernoulli or Multinomial Naïve Bayes, which are better suited for binary or categorical data, the Gaussian Naïve Bayes classifier assumes that feature values follow a normal distribution for each class. During training, the model learns the mean and variance of pixel values for each class, which are then used to compute class probabilities for unseen data. During inference, the model applies Bayes' theorem to determine the most likely class for a given input based on the learned distributions. This approach is computationally efficient, interpretable, and effective for classification tasks where feature independence is a reasonable assumption.
+
+For more details about implementation, please visit this [link](src/models/naive_bayes.py)
+
+## Bayes Network and Naive Bayes
 
 The Bayesian Network and Naive Bayes implementations leverage probabilistic graphical models to classify brain tumor images using extracted features rather than raw pixel data.
 
