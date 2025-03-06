@@ -1,0 +1,7 @@
+2025-03-04 21:19:53,340 - {'n_splits': 5, 'criterion': ['gini', 'entropy'], 'max_features': [700, 1000, 10000], 'min_samples_leaf': [20, 30, 50]}
+2025-03-04 21:19:53,342 - Decision Tree train with 5-fold cross-validation
+2025-03-04 21:19:53,342 - Grid search parameters: 
+2025-03-04 21:19:53,342 - {'criterion': ['gini', 'entropy'], 'max_features': [700, 1000, 10000], 'min_samples_leaf': [20, 30, 50]}
+2025-03-04 21:54:47,292 - Best parameters: {'criterion': 'gini', 'max_features': 10000, 'min_samples_leaf': 20}
+2025-03-04 21:54:47,298 - Best score: 0.4872557699065337
+2025-03-04 21:54:47,311 - Model saved at results\models\decision_tree\decision_tree_04032025_21-54-47.pkl

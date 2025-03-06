@@ -6,7 +6,9 @@ from pathlib import Path
 from utils.dataloader import get_dataset
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
+import os
 
+os.environ['PYTHONHASHSEED'] = '42'
 # function to load config.json file
 def load_config(filepath):
     with open(filepath, "r") as f:

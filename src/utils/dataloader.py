@@ -25,6 +25,7 @@ class ImageDataset(Dataset):
             self.images, self.labels = X,y
         elif image_dir:
             self.images, self.labels = preprocess_images(image_dir, img_size)
+            self.images = self.images.astype(np.float16)
             save_numpy(save_path, self.images, self.labels)
         else:
             raise ValueError("Either image_dir not None or X,y not None.")

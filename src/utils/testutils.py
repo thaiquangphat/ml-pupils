@@ -32,4 +32,3 @@ def metric_results(y_true, y_pred, y_score, metric_lst):
             score = eval(f"{metric}(y_true, y_pred)") 
         score_lst.append(score)
     return score_lst
-    

@@ -1,0 +1,3 @@
+2025-03-04 14:14:36,779 - Decision Tree train with 5-fold cross-validation
+2025-03-04 14:14:36,780 - Grid search parameters: 
+2025-03-04 14:14:36,780 - {'criterion': ['gini', 'entropy'], 'max_features': [50, 100, 1000], 'min_samples_leaf': [100, 500]}

@@ -1,8 +1,9 @@
 model: "ann"
-batch_size: 32
 
 model_args:
-  epochs: 8
+  batch_size: 64
+  epochs: 50
+  patience: 15
 
 metrics: ["accuracy_score", "auc_score","full"]
 
