@@ -44,7 +44,41 @@ For more details about implementation, please visit this [link](src/models/decis
 
 ## Artificial Neural Network (ANN)
 
-The implemented artificial neural network (ANN) follows a modified LeNet-5 architecture, designed for image classification. It consists of two main components: the feature extraction and classification layers. The feature extraction component includes two convolutional layers: the first layer applies six 5×5 filters with a stride of 1 and padding of 2, followed by an average pooling layer that reduces the spatial dimensions by a factor of two. The second convolutional layer applies sixteen 5×5 filters, followed by another average pooling operation. The classification component consists of three fully connected layers: the first linear layer maps the flattened feature maps (16 × 62 × 62) to 120 neurons, followed by a ReLU activation. The second layer further reduces the representation to 84 neurons with another ReLU activation. Finally, the last fully connected layer outputs logits corresponding to the number of target classes. The network uses softmax activation during inference for class probability estimation. The model is trained using Adam optimization and cross-entropy loss, with support for checkpointing and early stopping to improve generalization and efficiency.
+The implemented Artificial Neural Network (ANN) is a deep convolutional neural network (CNN) designed for image classification. The architecture consists of four convolutional blocks (feature extractors), followed by a fully connected classifier. This deep CNN is designed to automatically extract hierarchical features from input images, moving from basic edges and textures in the early layers to complex high-level representations in deeper layers. The feature extractor reduces spatial dimensions while increasing depth, capturing meaningful structures in the image. The classifier then transforms the extracted features into a prediction.
+
+Each convolutional block typically consists of five key layers:
+
+1. Convolutional Layer
+2. Normalization Layer
+3. Activation Layer
+4. Pooling Layer
+5. Dropout Layer
+
+### Convolution layer
+
+The convolutional layer is responsible for feature extraction. It applies a series of learnable filters (kernels) to the input data, performing convolution operations that capture spatial and hierarchical patterns. By sliding these filters across the input, the layer computes dot products between the kernel values and the corresponding input regions.
+
+Each filter specializes in detecting specific patterns, such as edges, textures, and complex structures, which are essential for accurate image recognition. The output of this operation is referred to as a feature map, which highlights the extracted features for subsequent processing.
+
+### Normalization layer
+
+The normalization layer plays a crucial role in stabilizing the training process and accelerating convergence by ensuring that neuron outputs maintain a standardized distribution. Batch Normalization, which normalizes the outputs within a mini-batch by adjusting their mean and variance, is used as normalization technique in the model. Batch normalization enables the use of higher learning rates, reducing sensitivity to parameter initialization and mitigating the problem of vanishing or exploding gradients
+
+### Activation layer
+
+The activation layer introduces non-linearity into the network, enabling it to learn complex patterns and relationships within the data. ReLu function is used in our model to express that idea.
+
+### Pooling layer
+
+The pooling layer reduces the spatial dimensions of the feature maps while preserving the most significant information. This downsampling process enhances computational efficiency, mitigates overfitting, and ensures robustness to minor spatial variations in the input.
+
+The architecture employs Max Pooling, which selects the maximum value within a defined window (e.g., 2×2). This method retains the most prominent features while discarding less significant information, contributing to effective feature selection.
+
+### Drop layer
+
+The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
+
+During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
 
 For more details about implementation, please visit this [link](src/models/ann.py)
 
