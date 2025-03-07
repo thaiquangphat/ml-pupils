@@ -4,8 +4,8 @@ model_args:
   bins: 5
   estimator: "bayes"
   naive: false
-  chunk_size: 200
-  output_dir: "feature_output"
+  chunk_size: 1000
+  output_dir: "features/output"
   visualization:
     enabled: true
     type: "network"

@@ -2,10 +2,10 @@ model: "bayes_net"
 model_args:
   discretize_features: true
   bins: 5
-  estimator: "mle"
+  estimator: "bayes"
   naive: true
-  chunk_size: 200
-  output_dir: "feature_output"
+  chunk_size: 1000
+  output_dir: "features/output"
   visualization:
     enabled: true
     type: "network"
