@@ -3,6 +3,7 @@ import pickle
 import os
 from pathlib import Path
 from itertools import chain
+import pandas as pd
 
 def get_latest_model_path(directory):
     """Returns the latest model file from a directory."""
@@ -65,4 +66,15 @@ def kaggle_download(dataset_name, save_dir):
     print(f"Dataset '{dataset_name}' downloaded and saved to '{save_dir}'.")
 
 
+def discretize_data(df, bins=5, numerical_cols=[]):
+    """Discretize continuous features for Bayesian Network."""
+    df_disc = df.copy()
     
+    for col in numerical_cols:
+        df_disc[col] = pd.qcut(df_disc[col], q=bins, labels=False, duplicates='drop')
+    
+    # Ensure all columns are strings for pgmpy
+    for col in df_disc.columns:
+        df_disc[col] = df_disc[col].astype(str)
+        
+    return df_disc

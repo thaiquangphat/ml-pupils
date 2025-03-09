@@ -7,7 +7,6 @@ from pathlib import Path
 from utils.dataloader import get_dataset
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
-from utils.visualization import visualize_bayesian_network, visualize_feature_relations
 
 
 # function to load config file
@@ -93,11 +92,6 @@ if __name__ == "__main__":
         y, y_preds, y_scores = eval_func(dataset, saved_path, args.model_args)
         print(metric_results(y, y_preds, y_scores, args.metrics))
 
-    if hasattr(model_module, "visualization"):
-        saved_path = args.saved_path if args.saved_path else get_latest_model_path(save_dir)
-        if not saved_path:
-            print("No saved model found for visualization")
-        else:
-            model_module.visualize(saved_path=saved_path, args=args.model_args)
+    model_module.visualize(saved_path=saved_path, args=args.model_args)
 
     print("Execution completed.")
