@@ -40,6 +40,8 @@ For this study, we will be utilizing the [Brain Tumor MRI Dataset](https://www.k
 
 The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
 
+After implementing the model with diffrent parameter configuration, the decision tree model highest accuracy scores is just 57% showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
+
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
 ## Artificial Neural Network (ANN)
@@ -83,13 +85,16 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 For more details about implementation, please visit this [link](src/models/ann.py)
 
 ## Genetic Algorithm (GA)
-In this usecase, Genetic Algorithm (GA) is used to optimize the performance of an Artificial Neural Networks (ANNs). 
+
+In this usecase, Genetic Algorithm (GA) is used to optimize the performance of an Artificial Neural Networks (ANNs).
 The implementation is based on PyTorch in order to utilizes its GPU computing.
 
 ### Data preparation and preprocessing
-The original dataset is downloaded and stored in the directory `dataset/Original`. After preprocessing, the new dataset is stored at `dataset/AfterPreprocess`. 
+
+The original dataset is downloaded and stored in the directory `dataset/Original`. After preprocessing, the new dataset is stored at `dataset/AfterPreprocess`.
 
 **Dataset structure**
+
 ```
 dataset
 |-- Original
@@ -118,28 +123,32 @@ dataset
 ```
 
 The preprocessing phase is handled by class **ImgPreprocess**, including:
+
 - Crop image to center the brain.
 - Augment the image with the ratio 0.25 (meaning that 25% image of each class will be augmented) and store the path of the augmented images in `dataset/AfterPreprocess/augmented_img_paths.json`
 - Crop the image to the size (255, 255)
 
 ### Dataset and Dataloader
+
 The dataset is handled by class **BrainTumorDataset** which utilizes **torch.utils.data.Dataset**. The dataloader is handled by class **Loader** which utilizes **torch.utils.data.Dataset**. The batch size is set to 32 and 20% of the training set is kept for validation.
 
 ### Dynamic Neural Networks
-The general architectures of the neural networks used in this use cases is that there are several Convolutional Neural Networks (CNNs) are stacked  together, followed by some Fully Connected Layers to produce the output. 
+
+The general architectures of the neural networks used in this use cases is that there are several Convolutional Neural Networks (CNNs) are stacked together, followed by some Fully Connected Layers to produce the output.
 
 This architecture is handled by the class **DynamicNN**. With this implementation, it allows the architecture of the networks to grow or shrink freely as well as the learning rate or its activation fucntion, depending on the optimization of the genetic algorithm.
 
 ### Genetic Algorithm
+
 The genetic algorithm plays as an optimizer to optimize the performance of the DynamicNN. This optimization is based on randomly growing or shrinking the architecture of the DynamicNN, changing the activation function or finding another suitable value for learning rate. All of these things are handled by class **GAOptimizer**.
-
-
 
 For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
 
 ## Naive Bayes
 
 The Naïve Bayes model implemented in this project follows the Gaussian Naïve Bayes (GNB) classification technique, a probabilistic model based on Bayes' theorem with the assumption of feature independence. Each pixel in the input image is treated as an independent feature, and the model estimates the probability that an image belongs to a specific tumor type. Since pixel values are continuous and range from 0 to 255, the Gaussian distribution is chosen to model the likelihood of the features, making it suitable for real-valued inputs. Unlike Bernoulli or Multinomial Naïve Bayes, which are better suited for binary or categorical data, the Gaussian Naïve Bayes classifier assumes that feature values follow a normal distribution for each class. During training, the model learns the mean and variance of pixel values for each class, which are then used to compute class probabilities for unseen data. During inference, the model applies Bayes' theorem to determine the most likely class for a given input based on the learned distributions. This approach is computationally efficient, interpretable, and effective for classification tasks where feature independence is a reasonable assumption.
+
+The Gaussian Naïve Bayes model is not well-suited for classifying brain tumors from MRI images, as evidenced by its highest accuracy score 60%. This could be due the fact that this model assumes independence among features, which is rarely the case in complex medical imaging data where pixel intensities and spatial relationships play a crucial role in classification. Naïve Bayes is typically effective for text classification and simpler datasets but lacks the ability to capture the intricate, hierarchical patterns present in MRI scans. Additionally, its reliance on strong independence assumptions leads to suboptimal performance when dealing with correlated features, which are common in image data.
 
 For more details about implementation, please visit this [link](src/models/naive_bayes.py)
 
