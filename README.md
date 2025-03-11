@@ -174,39 +174,6 @@ The Gaussian Naïve Bayes model is not well-suited for classifying brain tumors 
 
 For more details about implementation, please visit this [link](src/models/naive_bayes.py)
 
-## Bayes Network and Naive Bayes
-
-The Bayesian Network and Naive Bayes implementations leverage probabilistic graphical models to classify brain tumor images using extracted features rather than raw pixel data.
-
-### Feature Extraction
-
-Images are processed through segmentation to extract meaningful features including:
-
-- Geometric properties: area, perimeter, eccentricity, solidity
-- Intensity features: mean intensity, contrast, homogeneity
-  This feature extraction approach reduces dimensionality while preserving discriminative information
-
-### Model Structure
-
-- Bayesian Network: Implements a directed acyclic graph where features are connected to the tumor type classification
-- Naive Bayes: Available as a special configuration where all features are conditionally independent given the tumor type class
-- Implemented using the pgmpy library for probabilistic graphical models
-- Features automatic discretization of continuous values (configurable number of bins)
-- Supports different parameter estimation methods: Maximum Likelihood Estimation (MLE) and Bayesian Estimation with Bayesian Dirichlet equivalent uniform prior
-
-### Visualization
-
-- Network structure visualization shows relationships between variables
-- Feature correlation analysis helps understand dependencies between extracted features
-
-### Performance
-
-- Processing in chunks allows handling of large datasets with limited memory
-- Includes fallback inference mechanisms when standard inference fails
-- Custom probability calculation for both model types ensures robust prediction
-
-For more details about implementation, please visit this [link](src/models/bayes_net.py)
-
 ## Bayesian Network and Naive Bayes
 
 ### Feature Extraction Process
