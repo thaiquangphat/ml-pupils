@@ -50,9 +50,9 @@ The hyperparameters that need tuning include:
 
 For grid search, we using 'recall_macro' scoring strategy. The reason is that our task is to classify medical image, focusing on the increasing the number of correct prediction for having brain tumor, for which `recall` is most valuable metrics. Between 'recall_macro' and 'recall_micro', we use 'recall_macro' as our datasets split into 4 equal categories of brain tumor.
 
-The result of each running time is logged in results/log and further analysis is conducted in notebooks/result_analysis.
+The result of each running time is logged in results/log and further analysis is conducted in [notebook](notebooks/assignment1/result_analysis.ipynb).
 
-After implementing the model with diffrent parameter configuration, the decision tree model highest accuracy scores is just 57% showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
+The decision tree model highest accuracy scores is just 48% on validation set and 53% on test set showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
