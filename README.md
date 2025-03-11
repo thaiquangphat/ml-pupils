@@ -129,6 +129,7 @@ Both models use discretized versions of the extracted continuous features. Param
 
 ### Evaluation
 #### Result
+```
               precision    recall  f1-score   support
 
       glioma       0.74      0.54      0.62       405
@@ -139,6 +140,7 @@ Both models use discretized versions of the extracted continuous features. Param
     accuracy                           0.61      1311
    macro avg       0.63      0.62      0.61      1311
 weighted avg       0.63      0.61      0.61      1311
+```
 
 #### Overall Performance
 - Accuracy: 61% - The model achieves moderate performance overall, substantially better than random guessing (25% for 4 classes)
