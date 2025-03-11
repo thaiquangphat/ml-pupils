@@ -14,4 +14,3 @@ For grid search, we using 'recall_macro' scoring strategy. The reason is that ou
 The result of each running time is logged in results/log and further analysis is conducted in notebooks/result_analysis.
 
 ### ANN
-The model is based on simple LeNet5 model
