@@ -94,29 +94,90 @@ The genetic algorithm plays as an optimizer to optimize the performance of the D
 
 
 ## Bayesian Network and Naive Bayes
-The Bayesian Network and Naive Bayes implementations leverage probabilistic graphical models to classify brain tumor images using extracted features rather than raw pixel data.
 
-### Feature Extraction
-Images are processed through segmentation to extract meaningful features including:
-- Geometric properties: area, perimeter, eccentricity, solidity
-- Intensity features: mean intensity, contrast, homogeneity
-This feature extraction approach reduces dimensionality while preserving discriminative information
+### Feature Extraction Process
+The Bayesian Network and Naive Bayes models rely on a sophisticated feature extraction pipeline rather than using raw pixel data, making classification more efficient and accurate. Here's how the process works:
 
-### Model Structure
-- Bayesian Network: Implements a directed acyclic graph where features are connected to the tumor type classification
-- Naive Bayes: Available as a special configuration where all features are conditionally independent given the tumor type class
-- Implemented using the pgmpy library for probabilistic graphical models
-- Features automatic discretization of continuous values (configurable number of bins)
-- Supports different parameter estimation methods: Maximum Likelihood Estimation (MLE) and Bayesian Estimation with Bayesian Dirichlet equivalent uniform prior
+### Why Feature Extraction is Necessary
+- Dimensionality Reduction: MRI images contain millions of pixels, but most are redundant for classification. Feature extraction reduces this to just 8 meaningful features.
+- Focus on Relevant Information: Only certain characteristics of tumors (shape, texture, intensity) are diagnostically relevant.
+Robustness: Extracted features are more invariant to variations in image acquisition conditions than raw pixels.
+- Interpretability: Features like area and contrast have medical significance, making results more interpretable.
 
-### Visualization
-- Network structure visualization shows relationships between variables
-- Feature correlation analysis helps understand dependencies between extracted features
+### Detailed Feature Extraction Pipeline
+The segment_and_extract_features function implements this multi-stage process:
 
-### Performance
-- Processing in chunks allows handling of large datasets with limited memory
-- Includes fallback inference mechanisms when standard inference fails
-- Custom probability calculation for both model types ensures robust prediction
+- Image Preprocessing:
+    - Convert to floating-point format for precision
+    - Apply histogram equalization to enhance contrast
+    - Apply Gaussian smoothing (σ=0.8) to reduce noise
+- Tumor Segmentation - Using multiple methods sequentially until successful:
+    - Enhanced Otsu thresholding with morphological operations (opening/closing)
+    - Adaptive thresholding based on mean intensity
+    - Watershed segmentation with distance transform
+    - Each step includes border artifact removal and connected component labeling
+
+- Feature Extraction:
+    - Geometric Features:
+        - Area: Size of tumor region in pixels
+        - Perimeter: Boundary length of the tumor
+        - Eccentricity: Measure of tumor elongation (0=circle, 1=line)
+        - Solidity: Ratio of tumor area to its convex hull area (measure of irregularity)
+    - Texture Features using GLCM (Gray Level Co-occurrence Matrix):
+        - Contrast: Measures intensity variation between neighboring pixels
+        - Homogeneity: Measures texture uniformity
+        - Energy: Measures textural uniformity (higher = more uniform)
+        - Correlation: Measures linear dependencies between neighboring pixels
+
+### GLCM Analysis In-Depth
+The Gray Level Co-occurrence Matrix (GLCM) is a sophisticated texture analysis technique that captures spatial relationships between pixels.
+
+- Matrix Construction: 
+    - For each segmented tumor region, the code creates a matrix showing how often specific pairs of pixel intensities occur at particular spatial relationships
+    - Spatial Parameters:
+            - Distance: The code uses distances of 1 and 3 pixels, analyzing both immediate neighbors and slightly more distant relationships
+            - Angles: Four directions (0°, 45°, 90°, 135°) are examined to capture patterns in different orientations
+    - Matrix Elements: Each element ```GLCM[i,j]``` represents the probability of finding a pixel with intensity i adjacent to a pixel with intensity j. The matrix is normalized (normed=True) so values represent probabilities
+    - Result: ```graycomatrix(roi_valid, distances=[1, 3], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)```
+- Statistical Properties: From this matrix, we derive texture metrics that characterize different tumor types
+    - From the GLCM, four key statistical properties are calculated:
+
+    1. **Contrast**: `Σ(i,j) (i-j)² × P(i,j)`
+        - Measures local intensity variation
+        - High values indicate high contrast between neighboring pixels
+        - Relevant for identifying heterogeneous tumor regions
+
+    2. **Homogeneity**: `Σ(i,j) P(i,j) / (1 + |i-j|)`
+        - Measures closeness of element distribution to GLCM diagonal
+        - Higher values indicate more uniform textures
+        - Useful for differentiating smooth vs. irregular tumor surfaces
+
+    3. **Energy**: `Σ(i,j) P(i,j)²`
+        - Sum of squared elements in the GLCM
+        - Measures textural uniformity (higher = more uniform)
+        - Helps identify repeating texture patterns
+
+    4. **Correlation**: `Σ(i,j) ((i-μi)(j-μj)P(i,j))/(σiσj)`
+        - Measures linear dependencies between neighboring pixels
+        - Values range from -1 to 1
+        - Indicates how predictable pixel relationships are
+- Different tumor types exhibit characteristic texture patterns:
+    - Gliomas often show heterogeneous textures (lower homogeneity, higher contrast)
+    - Meningiomas typically have more uniform textures (higher energy)
+    - Metastases may have distinctive correlation patterns
+
+### Fallback Mechanism
+If segmentation fails (no tumor found or segmentation issues):
+- The code calculates global image statistics as approximations
+- Contrast is derived from normalized standard deviation
+- Homogeneity is calculated from histogram entropy
+- Area and perimeter are approximated from image dimensions
+
+### Model Implementation
+- Bayesian Network: Models probabilistic relationships between extracted features and tumor classes
+- Naive Bayes: Special case where all features are conditionally independent given the class
+Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques
+
 
 ## Support Vector Machine (SVM)
 
