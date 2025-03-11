@@ -44,12 +44,6 @@ After implementing the model with diffrent parameter configuration, the decision
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
-The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
-
-After implementing the model with diffrent parameter configuration, the decision tree model highest accuracy scores is just 57% showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
-
-For more details about implementation, please visit this [link](src/models/decision_tree.py)
-
 ## Artificial Neural Network (ANN)
 
 This project implements a deep convolutional neural network (CNN) based on the ResNet18 architecture, replicating the model presented in “Deep Residual Learning for Image Recognition”. ResNet18 is a state-of-the-art deep learning model designed for image classification, incorporating residual connections to address the vanishing gradient problem and improve training efficiency in deep networks. The proposed model is specifically tailored for grayscale brain MRI image classification, utilizing four residual convolutional blocks for feature extraction, followed by a fully connected classifier for prediction. The residual connections allow efficient gradient propagation, thereby enhancing the model’s training stability and performance.
@@ -60,25 +54,6 @@ The effectiveness of the ResNet18-based model was evaluated in comparison to a c
 
 The conventional CNN achieved an accuracy of 83% in brain MRI classification.
 The ResNet18-based model demonstrated a 94% accuracy, highlighting the advantages of residual connections in deep neural networks.
-
----
-
-### **Layer-wise Output Size Calculation**
-
-| **Layer**                                | **Operation**                       | **Output Size (C × H × W)**  |
-| ---------------------------------------- | ----------------------------------- | ---------------------------- |
-| **Input**                                | -                                   | **1 × 256 × 256**            |
-| **Conv1 (7×7, stride=2, padding=3)**     | Conv2D(1 → 64)                      | **64 × 128 × 128**           |
-| **MaxPool (3×3, stride=2, padding=1)**   | Downsampling                        | **64 × 64 × 64**             |
-| **Layer1 (2 Residual Blocks, stride=1)** | Conv2D(64 → 64)                     | **64 × 64 × 64**             |
-| **Layer2 (2 Residual Blocks, stride=2)** | Conv2D(64 → 128)                    | **128 × 32 × 32**            |
-| **Layer3 (2 Residual Blocks, stride=2)** | Conv2D(128 → 256)                   | **256 × 16 × 16**            |
-| **Layer4 (2 Residual Blocks, stride=2)** | Conv2D(256 → 512)                   | **512 × 8 × 8**              |
-| **AvgPool (1×1 Adaptive)**               | Global pooling                      | **512 × 1 × 1**              |
-| **Flatten**                              | -                                   | **512**                      |
-| **FC (Fully Connected Layer)**           | Output **(e.g., num_classes=1000)** | **1000 (or custom classes)** |
-
----
 
 ### Key Components of the Model
 
@@ -106,13 +81,30 @@ The architecture employs Max Pooling, which selects the maximum value within a d
 
 The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
 
-During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
+## During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
 
-For more details about implementation, please visit this [link](src/models/ann.py)
+### **Layer-wise Output Size Calculation**
+
+| **Layer**                                | **Operation**                       | **Output Size (C × H × W)**  |
+| ---------------------------------------- | ----------------------------------- | ---------------------------- |
+| **Input**                                | -                                   | **1 × 256 × 256**            |
+| **Conv1 (7×7, stride=2, padding=3)**     | Conv2D(1 → 64)                      | **64 × 128 × 128**           |
+| **MaxPool (3×3, stride=2, padding=1)**   | Downsampling                        | **64 × 64 × 64**             |
+| **Layer1 (2 Residual Blocks, stride=1)** | Conv2D(64 → 64)                     | **64 × 64 × 64**             |
+| **Layer2 (2 Residual Blocks, stride=2)** | Conv2D(64 → 128)                    | **128 × 32 × 32**            |
+| **Layer3 (2 Residual Blocks, stride=2)** | Conv2D(128 → 256)                   | **256 × 16 × 16**            |
+| **Layer4 (2 Residual Blocks, stride=2)** | Conv2D(256 → 512)                   | **512 × 8 × 8**              |
+| **AvgPool (1×1 Adaptive)**               | Global pooling                      | **512 × 1 × 1**              |
+| **Flatten**                              | -                                   | **512**                      |
+| **FC (Fully Connected Layer)**           | Output **(e.g., num_classes=1000)** | **1000 (or custom classes)** |
+
+---
 
 ### Small conclusion
 
 The ResNet18-based deep learning model presented in this study demonstrates high efficiency and accuracy in classifying brain MRI images. By leveraging residual connections, batch normalization, and dropout regularization, the model achieves 94% accuracy, significantly outperforming a conventional CNN model. The results highlight the effectiveness of deep residual learning in medical image classification, reinforcing its potential application in computer-aided diagnosis (CAD) systems.
+
+For more details about implementation, please visit this [link](src/models/ann.py)
 
 ## Genetic Algorithm (GA)
 
