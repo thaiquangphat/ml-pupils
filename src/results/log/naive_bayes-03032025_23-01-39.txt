@@ -1,8 +1,0 @@
-2025-03-03 23:01:39,590 - GuassianNB train with 5-fold cross-validation
-2025-03-03 23:02:06,652 - Fold 1 | val accuracy: 0.2397
-2025-03-03 23:02:50,969 - Fold 2 | val accuracy: 0.2581
-2025-03-03 23:03:18,431 - Fold 3 | val accuracy: 0.2102
-2025-03-03 23:03:44,460 - Fold 4 | val accuracy: 0.2285
-2025-03-03 23:04:13,418 - Fold 5 | val accuracy: 0.2198
-2025-03-03 23:04:13,418 - Average val accuracy: 0.23126132876122535
-2025-03-03 23:04:13,425 - Model saved at results\models\naive_bayes\naive_bayes_03032025_23-04-13.pkl
