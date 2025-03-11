@@ -150,12 +150,34 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 
 ---
 
-### Small conclusion
+### **Performance Metrics**
 
-The ResNet18-based deep learning model presented in this study demonstrates high efficiency and accuracy in classifying brain MRI images. By leveraging residual connections, batch normalization, and dropout regularization, the model achieves 94% accuracy, significantly outperforming a conventional CNN model. The results highlight the effectiveness of deep residual learning in medical image classification, reinforcing its potential application in computer-aided diagnosis (CAD) systems.
+- **Overall Accuracy:** 94%
+- **Macro Average F1-score:** 0.94
+- **Weighted Average F1-score:** 0.94
+
+#### **Class-wise Performance**
+
+| Class | Precision | Recall | F1-Score | Support |
+| ----- | --------- | ------ | -------- | ------- |
+| 0     | 0.97      | 0.98   | 0.98     | 405     |
+| 1     | 0.97      | 0.91   | 0.94     | 300     |
+| 2     | 0.95      | 0.94   | 0.95     | 300     |
+| 3     | 0.88      | 0.92   | 0.90     | 306     |
+
+### **Observations & Issues**
+
+- The ResNet18 model significantly outperforms both the Decision Tree and Gaussian Naïve Bayes models, achieving an accuracy of 94%.
+- High precision and recall across all classes indicate strong generalization and robust feature extraction.
+- Class 3 shows slightly lower precision (0.88) compared to other classes, suggesting potential misclassifications.
+- The model effectively learns complex spatial features from MRI images, overcoming the limitations seen in previous models.
+
+### **Use Case Fit Conclusion**
+
+The ResNet18 model is well-suited for brain tumor MRI classification, demonstrating superior accuracy and class balance compared to other models. Its ability to capture spatial features makes it a strong candidate for deployment in medical imaging applications. Further improvements can be explored through fine-tuning, data augmentation, and deeper architectures like Convolutional Neural Networks (CNNs) for even higher performance.
 
 For more details about implementation, please visit this [link](src/models/ann.py)
-Training using early stopping on validation set accuracy after
+The training process includes early stopping and saving best-performance model based on validation accuracy.
 
 ## Genetic Algorithm (GA)
 
