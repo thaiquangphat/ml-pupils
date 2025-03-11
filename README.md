@@ -44,45 +44,75 @@ After implementing the model with diffrent parameter configuration, the decision
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
+The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
+
+After implementing the model with diffrent parameter configuration, the decision tree model highest accuracy scores is just 57% showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
+
+For more details about implementation, please visit this [link](src/models/decision_tree.py)
+
 ## Artificial Neural Network (ANN)
 
-The implemented Artificial Neural Network (ANN) is a deep convolutional neural network (CNN) designed for image classification. The architecture consists of four convolutional blocks (feature extractors), followed by a fully connected classifier. This deep CNN is designed to automatically extract hierarchical features from input images, moving from basic edges and textures in the early layers to complex high-level representations in deeper layers. The feature extractor reduces spatial dimensions while increasing depth, capturing meaningful structures in the image. The classifier then transforms the extracted features into a prediction.
+This project implements a deep convolutional neural network (CNN) based on the ResNet18 architecture, replicating the model presented in “Deep Residual Learning for Image Recognition”. ResNet18 is a state-of-the-art deep learning model designed for image classification, incorporating residual connections to address the vanishing gradient problem and improve training efficiency in deep networks. The proposed model is specifically tailored for grayscale brain MRI image classification, utilizing four residual convolutional blocks for feature extraction, followed by a fully connected classifier for prediction. The residual connections allow efficient gradient propagation, thereby enhancing the model’s training stability and performance.
 
-Each convolutional block typically consists of five key layers:
+### Performance Comparison with Standard CNN Models
 
-1. Convolutional Layer
-2. Normalization Layer
-3. Activation Layer
-4. Pooling Layer
-5. Dropout Layer
+The effectiveness of the ResNet18-based model was evaluated in comparison to a conventional CNN that employs only convolutional and max pooling layers. The results indicate that:
 
-### Convolution layer
+The conventional CNN achieved an accuracy of 83% in brain MRI classification.
+The ResNet18-based model demonstrated a 94% accuracy, highlighting the advantages of residual connections in deep neural networks.
+
+---
+
+### **Layer-wise Output Size Calculation**
+
+| **Layer**                                | **Operation**                       | **Output Size (C × H × W)**  |
+| ---------------------------------------- | ----------------------------------- | ---------------------------- |
+| **Input**                                | -                                   | **1 × 256 × 256**            |
+| **Conv1 (7×7, stride=2, padding=3)**     | Conv2D(1 → 64)                      | **64 × 128 × 128**           |
+| **MaxPool (3×3, stride=2, padding=1)**   | Downsampling                        | **64 × 64 × 64**             |
+| **Layer1 (2 Residual Blocks, stride=1)** | Conv2D(64 → 64)                     | **64 × 64 × 64**             |
+| **Layer2 (2 Residual Blocks, stride=2)** | Conv2D(64 → 128)                    | **128 × 32 × 32**            |
+| **Layer3 (2 Residual Blocks, stride=2)** | Conv2D(128 → 256)                   | **256 × 16 × 16**            |
+| **Layer4 (2 Residual Blocks, stride=2)** | Conv2D(256 → 512)                   | **512 × 8 × 8**              |
+| **AvgPool (1×1 Adaptive)**               | Global pooling                      | **512 × 1 × 1**              |
+| **Flatten**                              | -                                   | **512**                      |
+| **FC (Fully Connected Layer)**           | Output **(e.g., num_classes=1000)** | **1000 (or custom classes)** |
+
+---
+
+### Key Components of the Model
+
+#### Convolution layer
 
 The convolutional layer is responsible for feature extraction. It applies a series of learnable filters (kernels) to the input data, performing convolution operations that capture spatial and hierarchical patterns. By sliding these filters across the input, the layer computes dot products between the kernel values and the corresponding input regions.
 
 Each filter specializes in detecting specific patterns, such as edges, textures, and complex structures, which are essential for accurate image recognition. The output of this operation is referred to as a feature map, which highlights the extracted features for subsequent processing.
 
-### Normalization layer
+#### Normalization layer
 
 The normalization layer plays a crucial role in stabilizing the training process and accelerating convergence by ensuring that neuron outputs maintain a standardized distribution. Batch Normalization, which normalizes the outputs within a mini-batch by adjusting their mean and variance, is used as normalization technique in the model. Batch normalization enables the use of higher learning rates, reducing sensitivity to parameter initialization and mitigating the problem of vanishing or exploding gradients
 
-### Activation layer
+#### Activation layer
 
 The activation layer introduces non-linearity into the network, enabling it to learn complex patterns and relationships within the data. ReLu function is used in our model to express that idea.
 
-### Pooling layer
+#### Pooling layer
 
 The pooling layer reduces the spatial dimensions of the feature maps while preserving the most significant information. This downsampling process enhances computational efficiency, mitigates overfitting, and ensures robustness to minor spatial variations in the input.
 
 The architecture employs Max Pooling, which selects the maximum value within a defined window (e.g., 2×2). This method retains the most prominent features while discarding less significant information, contributing to effective feature selection.
 
-### Drop layer
+#### Drop layer
 
 The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
 
 During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
 
 For more details about implementation, please visit this [link](src/models/ann.py)
+
+### Small conclusion
+
+The ResNet18-based deep learning model presented in this study demonstrates high efficiency and accuracy in classifying brain MRI images. By leveraging residual connections, batch normalization, and dropout regularization, the model achieves 94% accuracy, significantly outperforming a conventional CNN model. The results highlight the effectiveness of deep residual learning in medical image classification, reinforcing its potential application in computer-aided diagnosis (CAD) systems.
 
 ## Genetic Algorithm (GA)
 
@@ -154,7 +184,6 @@ For more details about implementation, please visit this [link](src/models/naive
 
 ## Bayes Network and Naive Bayes
 
-<<<<<<< HEAD
 The Bayesian Network and Naive Bayes implementations leverage probabilistic graphical models to classify brain tumor images using extracted features rather than raw pixel data.
 
 ### Feature Extraction
@@ -183,95 +212,104 @@ Images are processed through segmentation to extract meaningful features includi
 - Processing in chunks allows handling of large datasets with limited memory
 - Includes fallback inference mechanisms when standard inference fails
 - Custom probability calculation for both model types ensures robust prediction
-=======
+
+For more details about implementation, please visit this [link](src/models/bayes_net.py)
+
 ## Bayesian Network and Naive Bayes
 
 ### Feature Extraction Process
+
 The Bayesian Network and Naive Bayes models rely on a sophisticated feature extraction pipeline rather than using raw pixel data, making classification more efficient and accurate. Here's how the process works:
 
 ### Why Feature Extraction is Necessary
+
 - Dimensionality Reduction: MRI images contain millions of pixels, but most are redundant for classification. Feature extraction reduces this to just 8 meaningful features.
 - Focus on Relevant Information: Only certain characteristics of tumors (shape, texture, intensity) are diagnostically relevant.
-Robustness: Extracted features are more invariant to variations in image acquisition conditions than raw pixels.
+  Robustness: Extracted features are more invariant to variations in image acquisition conditions than raw pixels.
 - Interpretability: Features like area and contrast have medical significance, making results more interpretable.
 
 ### Detailed Feature Extraction Pipeline
+
 The segment_and_extract_features function implements this multi-stage process:
 
 - Image Preprocessing:
-    - Convert to floating-point format for precision
-    - Apply histogram equalization to enhance contrast
-    - Apply Gaussian smoothing (σ=0.8) to reduce noise
+  - Convert to floating-point format for precision
+  - Apply histogram equalization to enhance contrast
+  - Apply Gaussian smoothing (σ=0.8) to reduce noise
 - Tumor Segmentation - Using multiple methods sequentially until successful:
-    - Enhanced Otsu thresholding with morphological operations (opening/closing)
-    - Adaptive thresholding based on mean intensity
-    - Watershed segmentation with distance transform
-    - Each step includes border artifact removal and connected component labeling
+
+  - Enhanced Otsu thresholding with morphological operations (opening/closing)
+  - Adaptive thresholding based on mean intensity
+  - Watershed segmentation with distance transform
+  - Each step includes border artifact removal and connected component labeling
 
 - Feature Extraction:
-    - Geometric Features:
-        - Area: Size of tumor region in pixels
-        - Perimeter: Boundary length of the tumor
-        - Eccentricity: Measure of tumor elongation (0=circle, 1=line)
-        - Solidity: Ratio of tumor area to its convex hull area (measure of irregularity)
-    - Texture Features using GLCM (Gray Level Co-occurrence Matrix):
-        - Contrast: Measures intensity variation between neighboring pixels
-        - Homogeneity: Measures texture uniformity
-        - Energy: Measures textural uniformity (higher = more uniform)
-        - Correlation: Measures linear dependencies between neighboring pixels
+  - Geometric Features:
+    - Area: Size of tumor region in pixels
+    - Perimeter: Boundary length of the tumor
+    - Eccentricity: Measure of tumor elongation (0=circle, 1=line)
+    - Solidity: Ratio of tumor area to its convex hull area (measure of irregularity)
+  - Texture Features using GLCM (Gray Level Co-occurrence Matrix):
+    - Contrast: Measures intensity variation between neighboring pixels
+    - Homogeneity: Measures texture uniformity
+    - Energy: Measures textural uniformity (higher = more uniform)
+    - Correlation: Measures linear dependencies between neighboring pixels
 
 ### GLCM Analysis In-Depth
+
 The Gray Level Co-occurrence Matrix (GLCM) is a sophisticated texture analysis technique that captures spatial relationships between pixels.
 
-- Matrix Construction: 
-    - For each segmented tumor region, the code creates a matrix showing how often specific pairs of pixel intensities occur at particular spatial relationships
-    - Spatial Parameters:
-            - Distance: The code uses distances of 1 and 3 pixels, analyzing both immediate neighbors and slightly more distant relationships
-            - Angles: Four directions (0°, 45°, 90°, 135°) are examined to capture patterns in different orientations
-    - Matrix Elements: Each element ```GLCM[i,j]``` represents the probability of finding a pixel with intensity i adjacent to a pixel with intensity j. The matrix is normalized (normed=True) so values represent probabilities
-    - Result: ```graycomatrix(roi_valid, distances=[1, 3], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)```
+- Matrix Construction:
+  - For each segmented tumor region, the code creates a matrix showing how often specific pairs of pixel intensities occur at particular spatial relationships
+  - Spatial Parameters: - Distance: The code uses distances of 1 and 3 pixels, analyzing both immediate neighbors and slightly more distant relationships - Angles: Four directions (0°, 45°, 90°, 135°) are examined to capture patterns in different orientations
+  - Matrix Elements: Each element `GLCM[i,j]` represents the probability of finding a pixel with intensity i adjacent to a pixel with intensity j. The matrix is normalized (normed=True) so values represent probabilities
+  - Result: `graycomatrix(roi_valid, distances=[1, 3], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)`
 - Statistical Properties: From this matrix, we derive texture metrics that characterize different tumor types
-    - From the GLCM, four key statistical properties are calculated:
 
-    1. **Contrast**: `Σ(i,j) (i-j)² × P(i,j)`
-        - Measures local intensity variation
-        - High values indicate high contrast between neighboring pixels
-        - Relevant for identifying heterogeneous tumor regions
+  - From the GLCM, four key statistical properties are calculated:
 
-    2. **Homogeneity**: `Σ(i,j) P(i,j) / (1 + |i-j|)`
-        - Measures closeness of element distribution to GLCM diagonal
-        - Higher values indicate more uniform textures
-        - Useful for differentiating smooth vs. irregular tumor surfaces
+  1. **Contrast**: `Σ(i,j) (i-j)² × P(i,j)`
 
-    3. **Energy**: `Σ(i,j) P(i,j)²`
-        - Sum of squared elements in the GLCM
-        - Measures textural uniformity (higher = more uniform)
-        - Helps identify repeating texture patterns
+     - Measures local intensity variation
+     - High values indicate high contrast between neighboring pixels
+     - Relevant for identifying heterogeneous tumor regions
 
-    4. **Correlation**: `Σ(i,j) ((i-μi)(j-μj)P(i,j))/(σiσj)`
-        - Measures linear dependencies between neighboring pixels
-        - Values range from -1 to 1
-        - Indicates how predictable pixel relationships are
+  2. **Homogeneity**: `Σ(i,j) P(i,j) / (1 + |i-j|)`
+
+     - Measures closeness of element distribution to GLCM diagonal
+     - Higher values indicate more uniform textures
+     - Useful for differentiating smooth vs. irregular tumor surfaces
+
+  3. **Energy**: `Σ(i,j) P(i,j)²`
+
+     - Sum of squared elements in the GLCM
+     - Measures textural uniformity (higher = more uniform)
+     - Helps identify repeating texture patterns
+
+  4. **Correlation**: `Σ(i,j) ((i-μi)(j-μj)P(i,j))/(σiσj)`
+     - Measures linear dependencies between neighboring pixels
+     - Values range from -1 to 1
+     - Indicates how predictable pixel relationships are
+
 - Different tumor types exhibit characteristic texture patterns:
-    - Gliomas often show heterogeneous textures (lower homogeneity, higher contrast)
-    - Meningiomas typically have more uniform textures (higher energy)
-    - Metastases may have distinctive correlation patterns
+  - Gliomas often show heterogeneous textures (lower homogeneity, higher contrast)
+  - Meningiomas typically have more uniform textures (higher energy)
+  - Metastases may have distinctive correlation patterns
 
 ### Fallback Mechanism
+
 If segmentation fails (no tumor found or segmentation issues):
+
 - The code calculates global image statistics as approximations
 - Contrast is derived from normalized standard deviation
 - Homogeneity is calculated from histogram entropy
 - Area and perimeter are approximated from image dimensions
 
 ### Model Implementation
+
 - Bayesian Network: Models probabilistic relationships between extracted features and tumor classes
 - Naive Bayes: Special case where all features are conditionally independent given the class
-Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques
-
->>>>>>> main
-
-For more details about implementation, please visit this [link](src/models/bayes_net.py)
+  Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques
 
 ## Support Vector Machine (SVM)
 
