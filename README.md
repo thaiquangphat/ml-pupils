@@ -40,8 +40,6 @@ For this study, we will be utilizing the [Brain Tumor MRI Dataset](https://www.k
 
 The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
 
-### Decision Tree
-
 We use `DecisionTreeClassifer` from sklearn.tree with grid search on 5-fold cross validation.
 The hyperparameters that need tuning include:
 
