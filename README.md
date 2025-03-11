@@ -50,9 +50,47 @@ The hyperparameters that need tuning include:
 
 For grid search, we using 'recall_macro' scoring strategy. The reason is that our task is to classify medical image, focusing on the increasing the number of correct prediction for having brain tumor, for which `recall` is most valuable metrics. Between 'recall_macro' and 'recall_micro', we use 'recall_macro' as our datasets split into 4 equal categories of brain tumor.
 
-The result of each running time is logged in results/log and further analysis is conducted in [notebook](notebooks/assignment1/result_analysis.ipynb).
+The result of each running time is logged in results/log.
+**Analysis of Decision Tree Model Performance**
 
-The decision tree model highest accuracy scores is just 48% on validation set and 53% on test set showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
+### **Model Details**
+
+- **Tree Depth:** 17
+- **Total Nodes:** 369
+- **Leaf Nodes:** 185
+- **Number of Features Used:** 65,536
+- **Hyperparameters Optimized:**
+  - **Criterion:** Gini
+  - **Max Features:** 10,000
+  - **Min Samples per Leaf:** 20
+
+### **Performance Metrics**
+
+- **Overall Accuracy:** 53%
+- **Macro Average F1-score:** 0.51
+- **Weighted Average F1-score:** 0.52
+
+#### **Class-wise Performance**
+
+| Class | Precision | Recall | F1-Score | Support |
+| ----- | --------- | ------ | -------- | ------- |
+| 0     | 0.47      | 0.44   | 0.46     | 300     |
+| 1     | 0.36      | 0.33   | 0.35     | 306     |
+| 2     | 0.67      | 0.72   | 0.69     | 405     |
+| 3     | 0.53      | 0.55   | 0.54     | 300     |
+
+### **Observations & Issues**
+
+- The model achieves an overall accuracy of 53%, indicating limited predictive power.
+- Class 2 performs significantly better than others, suggesting potential data distribution issues.
+- The model uses 65,536 features, which can lead to overfitting and reduced interpretability.
+- Despite feature selection using max\_features = 10,000, the performance remains low, suggesting that many features might be irrelevant or redundant.
+- A tree depth of 17 with 369 nodes suggests a complex model that may be capturing noise rather than generalizable patterns.
+- The best cross-validation score was 48.7%, indicating that even with optimal parameters, the model struggles to generalize effectively.
+
+### **Use Case Fit Conclusion**
+
+The current Decision Tree model demonstrates limited effectiveness in brain tumor MRI classification due to high feature dimensionality, class imbalance, and potential overfitting. While it may provide some baseline insights, its relatively low accuracy and recall suggest that it is not well-suited for high-stakes medical applications. 
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
