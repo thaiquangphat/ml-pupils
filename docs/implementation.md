@@ -11,6 +11,7 @@ ml-pupils
     │── models/
     │── results/models/
     │── utils/
+    |── run.py
 |── tests
 |── requirements.txt 
 ```
@@ -60,6 +61,7 @@ Include dataset preprocessing, dataloading, and utilities
 - **dataloader.py**: encapsulate data in `ImageDataset`, use `get_dataset` to get the ImageDataset object. When an instance of ImageDataset is created, the images and labels will be processed by `preprocessing.process_image` and save to `dataset/processed` as .npz file  
 - **testutils.py**: include function for testing and evaluating on different metrics
 - **utils.py**: other utilities
+- **logger.py**: implement logging functionalities
 
 ### Results
 Store running log and results
