@@ -40,6 +40,20 @@ For this study, we will be utilizing the [Brain Tumor MRI Dataset](https://www.k
 
 The Decision Tree model implemented follows a supervised learning approach for classification tasks. The model is built using Scikit-learn’s DecisionTreeClassifier, which constructs a tree-based structure for decision-making. The input dataset consists of feature vectors extracted from images, which are flattened into a one-dimensional representation before training. The decision tree employs the Gini impurity criterion to measure the quality of splits, ensuring that each node partitions the data to maximize class purity. The tree is trained recursively by selecting the optimal feature at each node, splitting the data until a stopping criterion is met, such as reaching pure leaf nodes or a predefined depth. During inference, the model traverses the tree based on the feature values of an input sample, following the learned decision boundaries to assign a class label.
 
+### Decision Tree
+
+We use `DecisionTreeClassifer` from sklearn.tree with grid search on 5-fold cross validation.
+The hyperparameters that need tuning include:
+
+- `criterion`: ['gini', 'entropy']. Gini index one of the feature selection metrics that is used for building binary tree with faster computation, while Entropy is suitable for multi-class classification problem. We not tuning with 'log_loss' as it is more suitable for binary classification, which is not the case.
+- `max_features`: [50..10000]. As there are 256x256 features in an input array, the time complexity when choosing the best split is huge. To increase training time while maintain the model performance, we try to tune max_features to different values that is smaller than the original space.
+- `min_samples_leaf`: [50,100]. For generalization, we want to optimize the minimum samples at the leaf node, which is equivalent to performing a post pruning.
+- Other pruning-related hyperparameters such as `max_depth` is not used as we run on multiple trials and the max_depth in our case is not very deep.
+
+For grid search, we using 'recall_macro' scoring strategy. The reason is that our task is to classify medical image, focusing on the increasing the number of correct prediction for having brain tumor, for which `recall` is most valuable metrics. Between 'recall_macro' and 'recall_micro', we use 'recall_macro' as our datasets split into 4 equal categories of brain tumor.
+
+The result of each running time is logged in results/log and further analysis is conducted in notebooks/result_analysis.
+
 After implementing the model with diffrent parameter configuration, the decision tree model highest accuracy scores is just 57% showing that it is not well-suited for classifying brain MRI images. This could be explained by the inherent complexity and high-dimensional nature of medical imaging data. To be specific, decision trees perform optimally on structured, tabular data but struggle with image data, which contains intricate spatial patterns and features that require advanced processing techniques.
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
@@ -105,6 +119,7 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 The ResNet18-based deep learning model presented in this study demonstrates high efficiency and accuracy in classifying brain MRI images. By leveraging residual connections, batch normalization, and dropout regularization, the model achieves 94% accuracy, significantly outperforming a conventional CNN model. The results highlight the effectiveness of deep residual learning in medical image classification, reinforcing its potential application in computer-aided diagnosis (CAD) systems.
 
 For more details about implementation, please visit this [link](src/models/ann.py)
+Training using early stopping on validation set accuracy after
 
 ## Genetic Algorithm (GA)
 
