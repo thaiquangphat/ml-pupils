@@ -1,3 +1,11 @@
+## [1.2.3] 11-03-2025
+## Added
+- Model's Result Evaluation is added in README.md
+
+## [1.2.2] 09-03-2025
+### Added
+- Logger for saving training and evaluation process and result
+
 ## [1.2.1] 05-03-2025
 ### Modified
 - Model Introduction and Pipeline Explanation in README.md
