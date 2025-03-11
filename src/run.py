@@ -7,7 +7,7 @@ from pathlib import Path
 from utils.dataloader import get_dataset
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
-
+from utils.logger import get_logger
 
 # function to load config file
 def load_config(filepath):
@@ -73,6 +73,8 @@ if __name__ == "__main__":
 
     if not train_func or not eval_func:
         raise ValueError(f"Model '{args.model}' must define 'train' and 'evaluate' functions.")
+    
+    logger = get_logger(args.model)
 
     # Define model save path
     save_dir = Path(f"results/models/{args.model}")
@@ -90,7 +92,7 @@ if __name__ == "__main__":
         saved_path = args.saved_path if args.saved_path else get_latest_model_path(save_dir)
         dataset = get_dataset(test_dir, save_path=save_file)
         y, y_preds, y_scores = eval_func(dataset, saved_path, args.model_args)
-        print(metric_results(y, y_preds, y_scores, args.metrics))
+        logger.info(f"\n{metric_results(y, y_preds, y_scores, args.metrics)}")
 
     model_module.visualize(saved_path=saved_path, args=args.model_args)
 

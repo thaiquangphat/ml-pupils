@@ -9,6 +9,10 @@ from features.build_features import segment_and_extract_features
 from tqdm import tqdm
 from pathlib import Path
 from visualize.visualization import visualize_bayesian_network
+from utils.logger import get_logger
+import time
+
+logger = get_logger("bayes_net")
 
 COLS = ['area', 'perimeter', 'eccentricity', 'solidity', 'contrast', 'homogeneity', 'energy', 'correlation']
 
@@ -131,10 +135,13 @@ def train(dataset, save_dir, model_args=None):
     model_args : dict
         Model-specific arguments
     """
+    start_time = time.time()
+
     # Merge default args with provided args
     if model_args is None:
         model_args = {}
     args = {**DEFAULT_ARGS, **model_args}
+    logger.info(f"Model configuration: {args}")
     
     # Extract features from the dataset
     features_path = extract_features_from_imagedataset(
@@ -149,10 +156,13 @@ def train(dataset, save_dir, model_args=None):
     
     # Get naive parameter
     naive = args.get("naive", False)
+    model_type = "Naive Bayes" if naive else "Bayesian Network"
+    logger.info(f"=== Start {model_type} Training ===")
     
     # Load data
     df = pd.read_csv(features_path)
     train_df = df[df['split'] == 'train']  # Just in case
+    logger.info(f"Loaded {len(train_df)} training samples")
     
     feature_cols = COLS
     columns_to_use = feature_cols + ['label']
@@ -179,40 +189,49 @@ def train(dataset, save_dir, model_args=None):
     
     # Estimate parameters
     if args["estimator"] == "mle":
-        print("Using Maximum Likelihood Estimator...")
+        logger.info("Using Maximum Likelihood Estimator...")
         model.fit(model_df, estimator=MaximumLikelihoodEstimator)
     elif args["estimator"] == "bayes":
-        print("Using Bayesian Estimator...")
+        logger.info("Using Bayesian Estimator with BDeu prior...")
         model.fit(model_df, estimator=BayesianEstimator, prior_type="BDeu")
     else:
-        raise ValueError(f"Unknown estimator: {args['estimator']}")
+        error_msg = f"Unknown estimator: {args['estimator']}"
+        logger.error(error_msg)
+        raise ValueError(error_msg)
     
     # Print CPDs
-    print("CPDs after training:")
+    logger.info("CPDs after training:")
     for cpd in model.get_cpds():
-        print(f"Node: {cpd.variable}")
-        print(cpd)
+        logger.info(f"\nNode: {cpd.variable}\n{cpd}")
     
     # Save model
     save_path = Path(save_dir) / get_save_name("bayes_net", "pkl")
     save_pkl(model, save_path)
-    print(f"Model saved at {save_path}")
+    logger.info(f"Model saved at {save_path}")
+
+    # Log total training time
+    total_time = time.time() - start_time
+    logger.info(f"=== {model_type} training completed in {total_time:.2f} seconds ===")
     return model
 
 def evaluate(dataset, saved_path, model_args=None):
     """
     Evaluate Bayesian Network model on test data.
     """
+    start_time = time.time()
     if model_args is None:
         model_args = {}
     
     # Load the model
+    logger.info(f"Loading model from {saved_path}...")
     model = load_pkl(saved_path)
     
     # Get model parameters from the saved model
     output_dir = model.discretization_params.get("output_dir", "features/output")
     chunk_size = model.discretization_params.get("chunk_size", 1000)
     naive = model.discretization_params.get("naive", False)
+    model_type = "Naive Bayes" if naive else "Bayesian Network"
+    logger.info(f"=== Starting {model_type} Evaluation ===")
     
     # Extract features from the test dataset
     features_path = extract_features_from_imagedataset(
@@ -238,6 +257,7 @@ def evaluate(dataset, saved_path, model_args=None):
     y_scores = []
 
     # Process each sample
+    errors = 0
     for idx, row in test_df.iterrows():
         try:
             y.append(row['label'])
@@ -279,7 +299,8 @@ def evaluate(dataset, saved_path, model_args=None):
             y_scores.append(probs)
             
         except Exception as e:
-            print(f"Error processing sample {idx}: {str(e)}")
+            errors += 1
+            logger.error(f"Error processing sample {idx}: {str(e)}")
             # Use most common class as fallback
             most_common = test_df['label'].value_counts().idxmax()
             y_pred.append(most_common)
@@ -287,9 +308,11 @@ def evaluate(dataset, saved_path, model_args=None):
             probs[unique_labels.index(most_common)] = 1.0
             y_scores.append(probs)
     
+    if errors > 0:
+        logger.warning(f"Encountered errors in {errors} samples ({errors/len(test_df)*100:.2f}%)")
+    
     # Convert scores to numpy array with shape (n_samples, n_classes)
     y_scores = np.array(y_scores)
-    
     return y, y_pred, y_scores
 
 def visualize(saved_path=None, model=None, args=None):

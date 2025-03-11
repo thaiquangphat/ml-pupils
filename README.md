@@ -125,8 +125,39 @@ If segmentation fails (no tumor found or segmentation issues):
 ### Model Implementation
 - Bayesian Network: Models probabilistic relationships between extracted features and tumor classes
 - Naive Bayes: Special case where all features are conditionally independent given the class
-Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques
+Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques.
 
+### Evaluation
+#### Result
+              precision    recall  f1-score   support
+
+      glioma       0.74      0.54      0.62       405
+  meningioma       0.44      0.73      0.55       300
+     notumor       1.00      1.00      1.00       300
+   pituitary       0.32      0.23      0.26       306
+
+    accuracy                           0.61      1311
+   macro avg       0.63      0.62      0.61      1311
+weighted avg       0.63      0.61      0.61      1311
+
+#### Overall Performance
+- Accuracy: 61% - The model achieves moderate performance overall, substantially better than random guessing (25% for 4 classes)
+- Consistency: The weighted precision, recall, and F1-score all hover around 61-63%, indicating balanced performance across metrics
+
+#### Class-Specific Analysis
+- "No Tumor" Classification: Perfect performance (100% precision, recall) - The model excels at distinguishing between tumor and non-tumor cases
+- Glioma Detection: Good precision (74%) but moderate recall (54%) - When the model predicts glioma, it's usually correct, but it misses nearly half of actual glioma cases
+- Meningioma Detection: Lower precision (44%) with good recall (73%) - The model identifies most meningioma cases but frequently misclassifies other tumors as meningioma
+- Pituitary Detection: Poor performance overall (F1=26%) - The model struggles significantly with this tumor type
+
+#### Limitations and Areas for Improvement
+- Pituitary classification failure - The model particularly struggles with pituitary tumors, suggesting:
+    - The extracted GLCM features may not capture distinctive characteristics of pituitary tumors
+    - There might be class imbalance issues affecting the learning process
+- Feature engineering opportunities:
+    - Additional texture or shape features might help differentiate between tumor types
+    - More sophisticated segmentation techniques could improve feature quality
+    - Consider domain-specific features based on medical knowledge
 
 ## Support Vector Machine (SVM)
 
