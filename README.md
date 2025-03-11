@@ -52,8 +52,8 @@ This project implements a deep convolutional neural network (CNN) based on the R
 
 The effectiveness of the ResNet18-based model was evaluated in comparison to a conventional CNN that employs only convolutional and max pooling layers. The results indicate that:
 
-The conventional CNN achieved an accuracy of 83% in brain MRI classification.
-The ResNet18-based model demonstrated a 94% accuracy, highlighting the advantages of residual connections in deep neural networks.
+- The conventional CNN achieved an accuracy of 83% in brain MRI classification.
+- The ResNet18-based model demonstrated a 94% accuracy, highlighting the advantages of residual connections in deep neural networks.
 
 ### Key Components of the Model
 
@@ -81,7 +81,7 @@ The architecture employs Max Pooling, which selects the maximum value within a d
 
 The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
 
-## During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
+During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
 
 ### **Layer-wise Output Size Calculation**
 
