@@ -100,7 +100,7 @@ For more details about implementation, please visit this [link](src/models/decis
 
 The implemented Artificial Neural Network (ANN) is a convolutional neural network (CNN) designed for image classification, consisting of multiple feature extraction layers followed by a classification module. The model follows a hierarchical approach, progressively refining extracted features to improve classification accuracy.
 
-### Architecture Overview
+#### Architecture Overview
 
 The ANN consists of four feature extraction blocks, each containing convolutional layers, batch normalization, activation functions, and pooling operations. These layers extract spatial features from input images, capturing increasingly complex patterns as the depth of the network increases. The extracted features are then processed by a classification module that predicts the final output.
 
@@ -140,6 +140,32 @@ The architecture employs Max Pooling, which selects the maximum value within a d
 The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
 
 During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
+
+#### **Performance Metrics**
+
+- **Overall Accuracy:** 89%
+- **Macro Average F1-score:** 0.89
+- **Weighted Average F1-score:** 0.89
+
+##### **Class-wise Performance**
+
+| Class | Precision | Recall | F1-Score | Support |
+| ----- | --------- | ------ | -------- | ------- |
+| 0     | 0.81      | 0.72   | 0.76     | 306     |
+| 1     | 0.84      | 1.00   | 0.92     | 405     |
+| 2     | 0.96      | 0.98   | 0.97     | 300     |
+| 3     | 0.98      | 0.82   | 0.90     | 300     |
+
+#### **Observations & Issues**
+
+- The ANN model achieves an accuracy of **89%**, demonstrating strong classification capability.
+- High precision and recall for most classes indicate reliable performance, though Class 0 shows a slightly lower recall (0.72), suggesting some misclassifications.
+- The model provides a balanced classification across all categories with consistent F1-scores.
+- Performance could be further improved by fine-tuning hyperparameters, increasing dataset size, or implementing data augmentation techniques.
+
+#### **Use Case Fit Conclusion**
+
+The ANN model demonstrates strong suitability for brain tumor MRI classification, with an **89% accuracy and robust class-wise performance**. Its ability to effectively learn spatial features makes it a viable candidate for real-world medical applications. Future enhancements, such as deeper architectures or ensemble techniques, may further improve classification accuracy.
 
 ### ResNet18 architecture
 
