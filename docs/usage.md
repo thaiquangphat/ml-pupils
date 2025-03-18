@@ -1,7 +1,15 @@
 # USAGE
 
 ## Quick start
-Clone the repo, go the src/ directory, run with command:
+1. Clone the repo and install dependencies:
+```
+git clone https://github.com/thaiquangphat/ml-pupils
+cd ml-pupils
+```
+```
+conda env create -f environment.yml
+```
+2. Go the src/ directory, run with command:
 ```
 python -m run --model ann [options]
 ```
