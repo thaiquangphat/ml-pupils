@@ -1,0 +1,622 @@
+[
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ],
+    [
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        },
+        {
+            "train_losses": [],
+            "val_accuracies": [],
+            "test_accuracy": 0.0,
+            "fitness": 0.0
+        }
+    ]
+]
