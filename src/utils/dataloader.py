@@ -37,7 +37,7 @@ class ImageDataset(Dataset):
         image = self.images[idx]
         label = self.labels[idx]
         
-        image = torch.tensor(image, dtype=torch.float32)
+        image = torch.tensor(image, dtype=torch.float32).unsqueeze(0)
         label = torch.tensor(label, dtype=torch.long)
 
         return image, label
