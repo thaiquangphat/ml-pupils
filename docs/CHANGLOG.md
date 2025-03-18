@@ -12,7 +12,7 @@
 - Features for saving processed data and trained model
 - Add docs
 
-## [1.0.0] - 25-02-2025
+## [1.0.1] - 25-02-2025
 ### Modified
 - `train` function parameters changed, use **args** for model-specific argument passing
 - Update implementation and usage docs
@@ -21,7 +21,22 @@
 - Handle argument parsing with configuration file.
 - Add default arguments for ann.py
 
-## [1.0.1] - 03-03-2025
+## [1.0.2] 28-02-2025
+### Added
+- Perform Exploratory Data Analysis (EDA) on current features
+- Feature extraction explanation
+
+## [1.0.3] 02-03-2025
+### Modified
+- Improve feature extraction using GLCM
+- Improve Bayesian network structure from EDA
+- Added option `bayes` along with `mle`
+- Visualization option is simplified
+
+### Removed
+- Similarity Redundancy in Naive Bayes and Bayes Network model: remove `naive_bayes.py`
+  
+## [1.1.0] - 03-03-2025
 ### Modified: 
 - Move dataloader to model scope, run.py only provide ImageDataset object
 - Change `get_dataloader` to `get_dataset` to accomodate the above change.
@@ -31,7 +46,19 @@
 ### Added
 - Add validation for ann.py checkpointing and early stopping
 
-## [2.0.0] - 18-03-2025
+## [1.1.0] 05-03-2025
+### Modified
+- Model Introduction and Pipeline Explanation in README.md
+
+## [1.1.1] 09-03-2025
+### Added
+- Logger for saving training and evaluation process and result
+
+## [1.1.1] 11-03-2025
+## Added
+- Model's Result Evaluation is added in README.md
+
+## [1.2.0] - 18-03-2025
 ### Modified:
 - Separate train and evaluate function into separate files under their model folder.
 - Change run.py accordingly to import train and evaluate function dynamically
