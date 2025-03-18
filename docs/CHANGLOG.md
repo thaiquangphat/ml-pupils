@@ -30,3 +30,11 @@
 
 ### Added
 - Add validation for ann.py checkpointing and early stopping
+
+## [2.0.0] - 18-03-2025
+### Modified:
+- Separate train and evaluate function into separate files under their model folder.
+- Change run.py accordingly to import train and evaluate function dynamically
+
+### Add:
+- Add GA model implementation into pipeline

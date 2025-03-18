@@ -28,7 +28,9 @@ Orchestrate the flow of arguments parsing, path definition, data preprocessing, 
 - **processed/**: Save processed data in `.npz` format. Newly created dataset will be processed and save as `train.npz` and `test.npz`.
 
 ### Models
-Include python files implementing ML models, for example decision_tree.py. Each model must implement a `train` and a `evaluate` function 
+Each subfolder dedicate to a model implementation. For example, `ann/` have ann.py (define necesarry classes, functions, default arguments,...), train.py (define `train`function), eval.py (define `evaluate` function)/
+Each model must implement a `train` and a `evaluate` function in their corresponding .py file.
+
 #### Train
 ```
 train(dataset, save_dir, **args**)
