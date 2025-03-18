@@ -225,7 +225,7 @@ For more details about implementation, please visit this [link](src/models/ann/)
 The training process includes early stopping and saving best-performance model based on validation accuracy.
 
 ## Genetic Algorithm (GA)
-> **Note:** The following explanation is based on the notebook `notebooks/assignment1/genetic_algorithm.ipynb`. However, the actual implementation in `src/` follows a structured pipeline for processing, training, and evaluation.
+> **Note:** The following explanation is based on the notebook `notebooks/assignment1/genetic_algorithm.ipynb`. However, the actual implementation in `src/models/genetic_algorithm/` follows a structured pipeline for processing, training, and evaluation.
    
 In this usecase, Genetic Algorithm (GA) is used to optimize the performance of an Artificial Neural Networks (ANNs).
 The implementation is based on PyTorch in order to utilizes its GPU computing.
