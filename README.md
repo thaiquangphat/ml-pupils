@@ -92,7 +92,7 @@ The result of each running time is logged in results/log.
 
 The current Decision Tree model demonstrates limited effectiveness in brain tumor MRI classification due to high feature dimensionality, class imbalance, and potential overfitting. While it may provide some baseline insights, its relatively low accuracy and recall suggest that it is not well-suited for high-stakes medical applications.
 
-For more details about implementation, please visit this [link](src/models/decision_tree.py)
+For more details about implementation, please visit this [link](src/models/decision_tree/)
 
 ## Artificial Neural Network (ANN)
 
@@ -221,7 +221,7 @@ The effectiveness of the ResNet18-based model was evaluated in comparison to a c
 
 The ResNet18 model is well-suited for brain tumor MRI classification, demonstrating superior accuracy and class balance compared to other models. Its ability to capture spatial features makes it a strong candidate for deployment in medical imaging applications. Further improvements can be explored through fine-tuning, data augmentation, and deeper architectures like Convolutional Neural Networks (CNNs) for even higher performance.
 
-For more details about implementation, please visit this [link](src/models/ann.py)
+For more details about implementation, please visit this [link](src/models/ann/)
 The training process includes early stopping and saving best-performance model based on validation accuracy.
 
 ## Genetic Algorithm (GA)
@@ -296,7 +296,7 @@ The genetic algorithm plays as an optimizer to optimize the performance of the D
 
 The Genetic Algorithm (GA)-optimized Artificial Neural Network (ANN) demonstrates strong effectiveness in brain tumor MRI classification by dynamically evolving an optimal network topology. By systematically optimizing key parameters such as layer depth, neuron distribution, and activation functions, the GA enables the ANN to efficiently learn complex spatial patterns inherent in MRI images. The model’s high test accuracy and stable learning process indicate its robustness, making it well-suited for high-stakes medical applications where precision is critical.
 
-For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
+For more details about implementation, please visit this [link](notebooks/assignment1/genetic_algorithm.ipynb)
 
 ## Naive Bayes
 
@@ -304,103 +304,128 @@ The Naïve Bayes model implemented in this project follows the Gaussian Naïve B
 
 The Gaussian Naïve Bayes model is not well-suited for classifying brain tumors from MRI images, as evidenced by its highest accuracy score 60%. This could be due the fact that this model assumes independence among features, which is rarely the case in complex medical imaging data where pixel intensities and spatial relationships play a crucial role in classification. Naïve Bayes is typically effective for text classification and simpler datasets but lacks the ability to capture the intricate, hierarchical patterns present in MRI scans. Additionally, its reliance on strong independence assumptions leads to suboptimal performance when dealing with correlated features, which are common in image data.
 
-For more details about implementation, please visit this [link](src/models/naive_bayes.py)
+For more details about implementation, please visit this [link](src/models/naive_bayes/)
 
 ## Bayesian Network and Naive Bayes
 
 ### Feature Extraction Process
-
 The Bayesian Network and Naive Bayes models rely on a sophisticated feature extraction pipeline rather than using raw pixel data, making classification more efficient and accurate. Here's how the process works:
 
 ### Why Feature Extraction is Necessary
-
 - Dimensionality Reduction: MRI images contain millions of pixels, but most are redundant for classification. Feature extraction reduces this to just 8 meaningful features.
 - Focus on Relevant Information: Only certain characteristics of tumors (shape, texture, intensity) are diagnostically relevant.
-  Robustness: Extracted features are more invariant to variations in image acquisition conditions than raw pixels.
+Robustness: Extracted features are more invariant to variations in image acquisition conditions than raw pixels.
 - Interpretability: Features like area and contrast have medical significance, making results more interpretable.
 
 ### Detailed Feature Extraction Pipeline
-
 The segment_and_extract_features function implements this multi-stage process:
 
 - Image Preprocessing:
-  - Convert to floating-point format for precision
-  - Apply histogram equalization to enhance contrast
-  - Apply Gaussian smoothing (σ=0.8) to reduce noise
+    - Convert to floating-point format for precision
+    - Apply histogram equalization to enhance contrast
+    - Apply Gaussian smoothing (σ=0.8) to reduce noise
 - Tumor Segmentation - Using multiple methods sequentially until successful:
-
-  - Enhanced Otsu thresholding with morphological operations (opening/closing)
-  - Adaptive thresholding based on mean intensity
-  - Watershed segmentation with distance transform
-  - Each step includes border artifact removal and connected component labeling
+    - Enhanced Otsu thresholding with morphological operations (opening/closing)
+    - Adaptive thresholding based on mean intensity
+    - Watershed segmentation with distance transform
+    - Each step includes border artifact removal and connected component labeling
 
 - Feature Extraction:
-  - Geometric Features:
-    - Area: Size of tumor region in pixels
-    - Perimeter: Boundary length of the tumor
-    - Eccentricity: Measure of tumor elongation (0=circle, 1=line)
-    - Solidity: Ratio of tumor area to its convex hull area (measure of irregularity)
-  - Texture Features using GLCM (Gray Level Co-occurrence Matrix):
-    - Contrast: Measures intensity variation between neighboring pixels
-    - Homogeneity: Measures texture uniformity
-    - Energy: Measures textural uniformity (higher = more uniform)
-    - Correlation: Measures linear dependencies between neighboring pixels
+    - Geometric Features:
+        - Area: Size of tumor region in pixels
+        - Perimeter: Boundary length of the tumor
+        - Eccentricity: Measure of tumor elongation (0=circle, 1=line)
+        - Solidity: Ratio of tumor area to its convex hull area (measure of irregularity)
+    - Texture Features using GLCM (Gray Level Co-occurrence Matrix):
+        - Contrast: Measures intensity variation between neighboring pixels
+        - Homogeneity: Measures texture uniformity
+        - Energy: Measures textural uniformity (higher = more uniform)
+        - Correlation: Measures linear dependencies between neighboring pixels
 
 ### GLCM Analysis In-Depth
-
 The Gray Level Co-occurrence Matrix (GLCM) is a sophisticated texture analysis technique that captures spatial relationships between pixels.
 
-- Matrix Construction:
-  - For each segmented tumor region, the code creates a matrix showing how often specific pairs of pixel intensities occur at particular spatial relationships
-  - Spatial Parameters: - Distance: The code uses distances of 1 and 3 pixels, analyzing both immediate neighbors and slightly more distant relationships - Angles: Four directions (0°, 45°, 90°, 135°) are examined to capture patterns in different orientations
-  - Matrix Elements: Each element `GLCM[i,j]` represents the probability of finding a pixel with intensity i adjacent to a pixel with intensity j. The matrix is normalized (normed=True) so values represent probabilities
-  - Result: `graycomatrix(roi_valid, distances=[1, 3], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)`
+- Matrix Construction: 
+    - For each segmented tumor region, the code creates a matrix showing how often specific pairs of pixel intensities occur at particular spatial relationships
+    - Spatial Parameters:
+            - Distance: The code uses distances of 1 and 3 pixels, analyzing both immediate neighbors and slightly more distant relationships
+            - Angles: Four directions (0°, 45°, 90°, 135°) are examined to capture patterns in different orientations
+    - Matrix Elements: Each element ```GLCM[i,j]``` represents the probability of finding a pixel with intensity i adjacent to a pixel with intensity j. The matrix is normalized (normed=True) so values represent probabilities
+    - Result: ```graycomatrix(roi_valid, distances=[1, 3], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4], levels=256, symmetric=True, normed=True)```
 - Statistical Properties: From this matrix, we derive texture metrics that characterize different tumor types
+    - From the GLCM, four key statistical properties are calculated:
 
-  - From the GLCM, four key statistical properties are calculated:
+    1. **Contrast**: `Σ(i,j) (i-j)² × P(i,j)`
+        - Measures local intensity variation
+        - High values indicate high contrast between neighboring pixels
+        - Relevant for identifying heterogeneous tumor regions
 
-  1. **Contrast**: `Σ(i,j) (i-j)² × P(i,j)`
+    2. **Homogeneity**: `Σ(i,j) P(i,j) / (1 + |i-j|)`
+        - Measures closeness of element distribution to GLCM diagonal
+        - Higher values indicate more uniform textures
+        - Useful for differentiating smooth vs. irregular tumor surfaces
 
-     - Measures local intensity variation
-     - High values indicate high contrast between neighboring pixels
-     - Relevant for identifying heterogeneous tumor regions
+    3. **Energy**: `Σ(i,j) P(i,j)²`
+        - Sum of squared elements in the GLCM
+        - Measures textural uniformity (higher = more uniform)
+        - Helps identify repeating texture patterns
 
-  2. **Homogeneity**: `Σ(i,j) P(i,j) / (1 + |i-j|)`
-
-     - Measures closeness of element distribution to GLCM diagonal
-     - Higher values indicate more uniform textures
-     - Useful for differentiating smooth vs. irregular tumor surfaces
-
-  3. **Energy**: `Σ(i,j) P(i,j)²`
-
-     - Sum of squared elements in the GLCM
-     - Measures textural uniformity (higher = more uniform)
-     - Helps identify repeating texture patterns
-
-  4. **Correlation**: `Σ(i,j) ((i-μi)(j-μj)P(i,j))/(σiσj)`
-     - Measures linear dependencies between neighboring pixels
-     - Values range from -1 to 1
-     - Indicates how predictable pixel relationships are
-
+    4. **Correlation**: `Σ(i,j) ((i-μi)(j-μj)P(i,j))/(σiσj)`
+        - Measures linear dependencies between neighboring pixels
+        - Values range from -1 to 1
+        - Indicates how predictable pixel relationships are
 - Different tumor types exhibit characteristic texture patterns:
-  - Gliomas often show heterogeneous textures (lower homogeneity, higher contrast)
-  - Meningiomas typically have more uniform textures (higher energy)
-  - Metastases may have distinctive correlation patterns
+    - Gliomas often show heterogeneous textures (lower homogeneity, higher contrast)
+    - Meningiomas typically have more uniform textures (higher energy)
+    - Metastases may have distinctive correlation patterns
 
 ### Fallback Mechanism
-
 If segmentation fails (no tumor found or segmentation issues):
-
 - The code calculates global image statistics as approximations
 - Contrast is derived from normalized standard deviation
 - Homogeneity is calculated from histogram entropy
 - Area and perimeter are approximated from image dimensions
 
 ### Model Implementation
-
 - Bayesian Network: Models probabilistic relationships between extracted features and tumor classes
 - Naive Bayes: Special case where all features are conditionally independent given the class
-  Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques
+Both models use discretized versions of the extracted continuous features. Parameter estimation uses either Maximum Likelihood or Bayesian estimation techniques.
+
+### Evaluation
+#### Result
+```
+              precision    recall  f1-score   support
+
+      glioma       0.74      0.54      0.62       405
+  meningioma       0.44      0.73      0.55       300
+     notumor       1.00      1.00      1.00       300
+   pituitary       0.32      0.23      0.26       306
+
+    accuracy                           0.61      1311
+   macro avg       0.63      0.62      0.61      1311
+weighted avg       0.63      0.61      0.61      1311
+```
+
+#### Overall Performance
+- Accuracy: 61% - The model achieves moderate performance overall, substantially better than random guessing (25% for 4 classes)
+- Consistency: The weighted precision, recall, and F1-score all hover around 61-63%, indicating balanced performance across metrics
+
+#### Class-Specific Analysis
+- "No Tumor" Classification: Perfect performance (100% precision, recall) - The model excels at distinguishing between tumor and non-tumor cases
+- Glioma Detection: Good precision (74%) but moderate recall (54%) - When the model predicts glioma, it's usually correct, but it misses nearly half of actual glioma cases
+- Meningioma Detection: Lower precision (44%) with good recall (73%) - The model identifies most meningioma cases but frequently misclassifies other tumors as meningioma
+- Pituitary Detection: Poor performance overall (F1=26%) - The model struggles significantly with this tumor type
+
+#### Limitations and Areas for Improvement
+- Pituitary classification failure - The model particularly struggles with pituitary tumors, suggesting:
+    - The extracted GLCM features may not capture distinctive characteristics of pituitary tumors
+    - There might be class imbalance issues affecting the learning process
+- Feature engineering opportunities:
+    - Additional texture or shape features might help differentiate between tumor types
+    - More sophisticated segmentation techniques could improve feature quality
+    - Consider domain-specific features based on medical knowledge
+
+For more details about implementation, please visit this [link](src/models/bayes_net/)
 
 ## Support Vector Machine (SVM)
 
