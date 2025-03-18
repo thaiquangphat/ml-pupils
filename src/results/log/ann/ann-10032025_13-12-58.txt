@@ -1,0 +1,47 @@
+2025-03-10 13:12:58,832 - {'epochs': 50, 'log_step': 1, 'split': [0.9, 0.1], 'checkpoint_path': None, 'patience': 15, 'batch_size': 64}
+2025-03-10 13:13:22,083 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:13:22,083 - Epoch [1/50] - Train loss: 0.7586 - Val loss: 1.4928
+2025-03-10 13:13:38,876 - Epoch [2/50] - Train loss: 0.4286 - Val loss: 1.5452
+2025-03-10 13:13:56,105 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:13:56,106 - Epoch [3/50] - Train loss: 0.3259 - Val loss: 0.9120
+2025-03-10 13:14:13,436 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:14:13,436 - Epoch [4/50] - Train loss: 0.2672 - Val loss: 0.7324
+2025-03-10 13:14:31,080 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:14:31,080 - Epoch [5/50] - Train loss: 0.2199 - Val loss: 0.4029
+2025-03-10 13:14:48,431 - Epoch [6/50] - Train loss: 0.1867 - Val loss: 1.7189
+2025-03-10 13:15:05,876 - Epoch [7/50] - Train loss: 0.1543 - Val loss: 3.1218
+2025-03-10 13:15:23,422 - Epoch [8/50] - Train loss: 0.1444 - Val loss: 1.8762
+2025-03-10 13:15:40,894 - Epoch [9/50] - Train loss: 0.1173 - Val loss: 1.7722
+2025-03-10 13:15:58,330 - Epoch [10/50] - Train loss: 0.0812 - Val loss: 3.1183
+2025-03-10 13:16:15,720 - Epoch [11/50] - Train loss: 0.0830 - Val loss: 3.6653
+2025-03-10 13:16:33,483 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:16:33,483 - Epoch [12/50] - Train loss: 0.0661 - Val loss: 0.2709
+2025-03-10 13:16:50,933 - Epoch [13/50] - Train loss: 0.0559 - Val loss: 0.5357
+2025-03-10 13:17:08,413 - Epoch [14/50] - Train loss: 0.0382 - Val loss: 0.9059
+2025-03-10 13:17:25,866 - Epoch [15/50] - Train loss: 0.0545 - Val loss: 0.4567
+2025-03-10 13:17:43,326 - Epoch [16/50] - Train loss: 0.0474 - Val loss: 0.6850
+2025-03-10 13:18:00,784 - Epoch [17/50] - Train loss: 0.0196 - Val loss: 0.5213
+2025-03-10 13:18:18,235 - Epoch [18/50] - Train loss: 0.0180 - Val loss: 1.0915
+2025-03-10 13:18:35,700 - Epoch [19/50] - Train loss: 0.0446 - Val loss: 1.2230
+2025-03-10 13:18:53,145 - Epoch [20/50] - Train loss: 0.0351 - Val loss: 0.6624
+2025-03-10 13:19:10,602 - Epoch [21/50] - Train loss: 0.0248 - Val loss: 0.5374
+2025-03-10 13:19:28,035 - Epoch [22/50] - Train loss: 0.0210 - Val loss: 0.9889
+2025-03-10 13:19:45,487 - Epoch [23/50] - Train loss: 0.0250 - Val loss: 0.4636
+2025-03-10 13:20:03,247 - Checkpoint saved at results/models/ann/ann_10032025_13-13-03.pt
+2025-03-10 13:20:03,247 - Epoch [24/50] - Train loss: 0.0185 - Val loss: 0.2343
+2025-03-10 13:20:20,686 - Epoch [25/50] - Train loss: 0.0266 - Val loss: 0.2513
+2025-03-10 13:20:38,122 - Epoch [26/50] - Train loss: 0.0188 - Val loss: 0.2744
+2025-03-10 13:20:55,554 - Epoch [27/50] - Train loss: 0.0206 - Val loss: 0.8185
+2025-03-10 13:21:13,007 - Epoch [28/50] - Train loss: 0.0137 - Val loss: 0.5566
+2025-03-10 13:21:30,432 - Epoch [29/50] - Train loss: 0.0189 - Val loss: 0.3180
+2025-03-10 13:21:47,894 - Epoch [30/50] - Train loss: 0.0284 - Val loss: 1.6910
+2025-03-10 13:22:05,326 - Epoch [31/50] - Train loss: 0.0190 - Val loss: 0.8694
+2025-03-10 13:22:22,780 - Epoch [32/50] - Train loss: 0.0077 - Val loss: 0.7598
+2025-03-10 13:22:40,224 - Epoch [33/50] - Train loss: 0.0035 - Val loss: 0.2601
+2025-03-10 13:22:57,677 - Epoch [34/50] - Train loss: 0.0004 - Val loss: 0.2681
+2025-03-10 13:23:15,131 - Epoch [35/50] - Train loss: 0.0002 - Val loss: 0.2560
+2025-03-10 13:23:32,570 - Epoch [36/50] - Train loss: 0.0001 - Val loss: 0.2552
+2025-03-10 13:23:50,033 - Epoch [37/50] - Train loss: 0.0001 - Val loss: 0.2549
+2025-03-10 13:24:07,474 - Epoch [38/50] - Train loss: 0.0001 - Val loss: 0.2549
+2025-03-10 13:24:24,929 - Epoch [39/50] - Train loss: 0.0001 - Val loss: 0.2550
+2025-03-10 13:24:42,370 - Model stop training at epoch 40. Val loss: 0.2552
