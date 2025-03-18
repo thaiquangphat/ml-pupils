@@ -84,56 +84,75 @@ The result of each running time is logged in results/log.
 - The model achieves an overall accuracy of 53%, indicating limited predictive power.
 - Class 2 performs significantly better than others, suggesting potential data distribution issues.
 - The model uses 65,536 features, which can lead to overfitting and reduced interpretability.
-- Despite feature selection using max\_features = 10,000, the performance remains low, suggesting that many features might be irrelevant or redundant.
+- Despite feature selection using max_features = 10,000, the performance remains low, suggesting that many features might be irrelevant or redundant.
 - A tree depth of 17 with 369 nodes suggests a complex model that may be capturing noise rather than generalizable patterns.
 - The best cross-validation score was 48.7%, indicating that even with optimal parameters, the model struggles to generalize effectively.
 
 ### **Use Case Fit Conclusion**
 
-The current Decision Tree model demonstrates limited effectiveness in brain tumor MRI classification due to high feature dimensionality, class imbalance, and potential overfitting. While it may provide some baseline insights, its relatively low accuracy and recall suggest that it is not well-suited for high-stakes medical applications. 
+The current Decision Tree model demonstrates limited effectiveness in brain tumor MRI classification due to high feature dimensionality, class imbalance, and potential overfitting. While it may provide some baseline insights, its relatively low accuracy and recall suggest that it is not well-suited for high-stakes medical applications.
 
 For more details about implementation, please visit this [link](src/models/decision_tree.py)
 
 ## Artificial Neural Network (ANN)
 
+### Customed ANN
+
+The implemented Artificial Neural Network (ANN) is a convolutional neural network (CNN) designed for image classification, consisting of multiple feature extraction layers followed by a classification module. The model follows a hierarchical approach, progressively refining extracted features to improve classification accuracy.
+
+### Architecture Overview
+
+The ANN consists of four feature extraction blocks, each containing convolutional layers, batch normalization, activation functions, and pooling operations. These layers extract spatial features from input images, capturing increasingly complex patterns as the depth of the network increases. The extracted features are then processed by a classification module that predicts the final output.
+
+| Layer        | Operation                                                                                                                                        | Output Size (C × H × W) |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| _Input_      | -                                                                                                                                                | 1 × 256 × 256           |
+| _Feature1_   | `Conv2D(1 → 6, kernel=5, stride=1, padding=2)` → `BatchNorm2d(6)` → `ReLU` → `MaxPool2d(2×2, stride=2)`                                          | 6 × 128 × 128           |
+| _Feature2_   | `Conv2D(6 → 16)` → `BatchNorm2d(16)` → `ReLU` → `MaxPool2d(2×2)` → `Dropout(0.1)`                                                                | 16 × 64 × 64            |
+| _Feature3_   | `Conv2D(16 → 32)` → `BatchNorm2d(32)` → `ReLU` → `MaxPool2d(2×2)` → `Dropout(0.1)`                                                               | 32 × 32 × 32            |
+| _Feature4_   | `Conv2D(32 → 64)` → `BatchNorm2d(64)` → `ReLU` → `MaxPool2d(2×2)` → `Dropout(0.2)`                                                               | 64 × 16 × 16            |
+| _Classifier_ | `Conv2D(64 → 120)` → `BatchNorm2d(120)` → `ReLU` → `AdaptiveAvgPool(1×1)` → `Flatten` → `Linear(120 → 84)` → `ReLU` → `Linear(84 → num_classes)` | num_classes (e.g., 4)   |
+
+#### Key Components of the Model
+
+##### Convolution layer
+
+The convolutional layer is responsible for feature extraction. It applies a series of learnable filters (kernels) to the input data, performing convolution operations that capture spatial and hierarchical patterns. By sliding these filters across the input, the layer computes dot products between the kernel values and the corresponding input regions.
+
+Each filter specializes in detecting specific patterns, such as edges, textures, and complex structures, which are essential for accurate image recognition. The output of this operation is referred to as a feature map, which highlights the extracted features for subsequent processing.
+
+##### Normalization layer
+
+The normalization layer plays a crucial role in stabilizing the training process and accelerating convergence by ensuring that neuron outputs maintain a standardized distribution. Batch Normalization, which normalizes the outputs within a mini-batch by adjusting their mean and variance, is used as normalization technique in the model. Batch normalization enables the use of higher learning rates, reducing sensitivity to parameter initialization and mitigating the problem of vanishing or exploding gradients
+
+##### Activation layer
+
+The activation layer introduces non-linearity into the network, enabling it to learn complex patterns and relationships within the data. ReLu function is used in our model to express that idea.
+
+##### Pooling layer
+
+The pooling layer reduces the spatial dimensions of the feature maps while preserving the most significant information. This downsampling process enhances computational efficiency, mitigates overfitting, and ensures robustness to minor spatial variations in the input.
+
+The architecture employs Max Pooling, which selects the maximum value within a defined window (e.g., 2×2). This method retains the most prominent features while discarding less significant information, contributing to effective feature selection.
+
+##### Drop layer
+
+The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
+
+During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
+
+### ResNet18 architecture
+
 This project implements a deep convolutional neural network (CNN) based on the ResNet18 architecture, replicating the model presented in “Deep Residual Learning for Image Recognition”. ResNet18 is a state-of-the-art deep learning model designed for image classification, incorporating residual connections to address the vanishing gradient problem and improve training efficiency in deep networks. The proposed model is specifically tailored for grayscale brain MRI image classification, utilizing four residual convolutional blocks for feature extraction, followed by a fully connected classifier for prediction. The residual connections allow efficient gradient propagation, thereby enhancing the model’s training stability and performance.
 
-### Performance Comparison with Standard CNN Models
+#### Performance Comparison with Standard CNN Models
 
 The effectiveness of the ResNet18-based model was evaluated in comparison to a conventional CNN that employs only convolutional and max pooling layers. The results indicate that:
 
 - The conventional CNN achieved an accuracy of 83% in brain MRI classification.
 - The ResNet18-based model demonstrated a 94% accuracy, highlighting the advantages of residual connections in deep neural networks.
 
-### Key Components of the Model
-
-#### Convolution layer
-
-The convolutional layer is responsible for feature extraction. It applies a series of learnable filters (kernels) to the input data, performing convolution operations that capture spatial and hierarchical patterns. By sliding these filters across the input, the layer computes dot products between the kernel values and the corresponding input regions.
-
-Each filter specializes in detecting specific patterns, such as edges, textures, and complex structures, which are essential for accurate image recognition. The output of this operation is referred to as a feature map, which highlights the extracted features for subsequent processing.
-
-#### Normalization layer
-
-The normalization layer plays a crucial role in stabilizing the training process and accelerating convergence by ensuring that neuron outputs maintain a standardized distribution. Batch Normalization, which normalizes the outputs within a mini-batch by adjusting their mean and variance, is used as normalization technique in the model. Batch normalization enables the use of higher learning rates, reducing sensitivity to parameter initialization and mitigating the problem of vanishing or exploding gradients
-
-#### Activation layer
-
-The activation layer introduces non-linearity into the network, enabling it to learn complex patterns and relationships within the data. ReLu function is used in our model to express that idea.
-
-#### Pooling layer
-
-The pooling layer reduces the spatial dimensions of the feature maps while preserving the most significant information. This downsampling process enhances computational efficiency, mitigates overfitting, and ensures robustness to minor spatial variations in the input.
-
-The architecture employs Max Pooling, which selects the maximum value within a defined window (e.g., 2×2). This method retains the most prominent features while discarding less significant information, contributing to effective feature selection.
-
-#### Drop layer
-
-The dropout layer is a regularization technique designed to enhance generalization and reduce overfitting in neural networks. Overfitting occurs when the model memorizes training data instead of learning underlying patterns, leading to poor performance on unseen data.
-
-During training, dropout randomly deactivates (i.e., sets to zero) a fraction of neurons within a layer, forcing the network to develop redundant feature representations. This prevents the model from becoming overly dependent on specific pathways and encourages the learning of more robust and distributed feature representations.
-
-### **Layer-wise Output Size Calculation**
+#### **Layer-wise Output Size Calculation**
 
 | **Layer**                                | **Operation**                       | **Output Size (C × H × W)**  |
 | ---------------------------------------- | ----------------------------------- | ---------------------------- |
@@ -150,13 +169,13 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 
 ---
 
-### **Performance Metrics**
+#### **Performance Metrics**
 
 - **Overall Accuracy:** 94%
 - **Macro Average F1-score:** 0.94
 - **Weighted Average F1-score:** 0.94
 
-#### **Class-wise Performance**
+##### **Class-wise Performance**
 
 | Class | Precision | Recall | F1-Score | Support |
 | ----- | --------- | ------ | -------- | ------- |
@@ -165,14 +184,14 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 | 2     | 0.95      | 0.94   | 0.95     | 300     |
 | 3     | 0.88      | 0.92   | 0.90     | 306     |
 
-### **Observations & Issues**
+#### **Observations & Issues**
 
 - The ResNet18 model significantly outperforms both the Decision Tree and Gaussian Naïve Bayes models, achieving an accuracy of 94%.
 - High precision and recall across all classes indicate strong generalization and robust feature extraction.
 - Class 3 shows slightly lower precision (0.88) compared to other classes, suggesting potential misclassifications.
 - The model effectively learns complex spatial features from MRI images, overcoming the limitations seen in previous models.
 
-### **Use Case Fit Conclusion**
+#### **Use Case Fit Conclusion**
 
 The ResNet18 model is well-suited for brain tumor MRI classification, demonstrating superior accuracy and class balance compared to other models. Its ability to capture spatial features makes it a strong candidate for deployment in medical imaging applications. Further improvements can be explored through fine-tuning, data augmentation, and deeper architectures like Convolutional Neural Networks (CNNs) for even higher performance.
 
@@ -236,6 +255,20 @@ This architecture is handled by the class **DynamicNN**. With this implementatio
 ### Genetic Algorithm
 
 The genetic algorithm plays as an optimizer to optimize the performance of the DynamicNN. This optimization is based on randomly growing or shrinking the architecture of the DynamicNN, changing the activation function or finding another suitable value for learning rate. All of these things are handled by class **GAOptimizer**.
+
+### **Performance Metrics**
+
+- **Fitness**: 0.9483
+- **Final Test Accuracy**: 0.9860
+
+### **Observations & Issues**
+
+- With a fitness score of 0.9483 and a final test accuracy of 98.60%, the ANN, guided by GA, can effectively learn meaningful feature representations and achieve superior classification performance.
+- The training loss values, which progressively decrease across epochs, suggest stable and efficient learning
+
+### **Use case fit conclusion**
+
+The Genetic Algorithm (GA)-optimized Artificial Neural Network (ANN) demonstrates strong effectiveness in brain tumor MRI classification by dynamically evolving an optimal network topology. By systematically optimizing key parameters such as layer depth, neuron distribution, and activation functions, the GA enables the ANN to efficiently learn complex spatial patterns inherent in MRI images. The model’s high test accuracy and stable learning process indicate its robustness, making it well-suited for high-stakes medical applications where precision is critical.
 
 For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
 
