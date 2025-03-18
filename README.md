@@ -165,7 +165,7 @@ During training, dropout randomly deactivates (i.e., sets to zero) a fraction of
 
 #### **Use Case Fit Conclusion**
 
-The ANN model demonstrates strong suitability for brain tumor MRI classification, with an **89% accuracy and robust class-wise performance**. Its ability to effectively learn spatial features makes it a viable candidate for real-world medical applications. Future enhancements, such as deeper architectures or ensemble techniques, may further improve classification accuracy.
+The ANN model is well-suited for brain tumor MRI classification, achieving high accuracy and reliable class-wise performance. Its ability to learn spatial and textural patterns from MRI images makes it a strong candidate for deployment in medical imaging applications. The model demonstrates balanced precision and recall across multiple tumor classes, ensuring robust classification. Further improvements can be explored through hyperparameter tuning, increased dataset diversity, and advanced techniques such as transfer learning or ensemble methods to further enhance performance and generalization.
 
 ### ResNet18 architecture
 
