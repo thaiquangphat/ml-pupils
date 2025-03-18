@@ -1,0 +1,40 @@
+## [1.0.0] - 23-02-2025
+### Removed
+- Delete initial `src` structure
+
+### Added
+- Data downloading and preprocessing pipeline for `preprocessing.py`
+- Implement Dataloader for getting input to models
+- Add utilities for getting paths, download kaggle dataset
+- Add testing on evaluation metrics
+- Implement train and evaluate functions for `decision_tree.py` and `ann.py` models, **no cross-validation**
+- Simple LeNet5 models for `ann.py`, adding batch normalization 
+- Features for saving processed data and trained model
+- Add docs
+
+## [1.0.0] - 25-02-2025
+### Modified
+- `train` function parameters changed, use **args** for model-specific argument passing
+- Update implementation and usage docs
+
+### Added
+- Handle argument parsing with configuration file.
+- Add default arguments for ann.py
+
+## [1.0.1] - 03-03-2025
+### Modified: 
+- Move dataloader to model scope, run.py only provide ImageDataset object
+- Change `get_dataloader` to `get_dataset` to accomodate the above change.
+- Move config files to a separate folder `src/config/`
+- Modify docs for `train` and `evaluate` implementation
+
+### Added
+- Add validation for ann.py checkpointing and early stopping
+
+## [2.0.0] - 18-03-2025
+### Modified:
+- Separate train and evaluate function into separate files under their model folder.
+- Change run.py accordingly to import train and evaluate function dynamically
+
+### Add:
+- Add GA model implementation into pipeline
