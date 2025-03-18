@@ -125,7 +125,7 @@ class ANN(nn.Module):
             nn.BatchNorm2d(16),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),  # (128x128) -> (64x64)
-            nn.Dropout(0.3),
+            nn.Dropout(0.1),
         )
 
         self.feature3 = nn.Sequential(
@@ -133,7 +133,7 @@ class ANN(nn.Module):
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),  # (64x64) -> (32x32)
-            nn.Dropout(0.3),
+            nn.Dropout(0.1),
         )
 
         self.feature4 = nn.Sequential(
@@ -141,7 +141,7 @@ class ANN(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),  # (32x32) -> (16x16)
-            nn.Dropout(0.4),
+            nn.Dropout(0.2),
         )
 
         self.classifier = nn.Sequential(

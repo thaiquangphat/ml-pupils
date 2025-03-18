@@ -13,8 +13,7 @@ DEFAULT_ARGS = {
     'split': [0.9, 0.1]
 }
 
-src_path = Path(os.path.dirname(os.path.dirname(os.getcwd())))
-
+src_path = Path(os.getcwd())
 class DynamicNN(nn.Module):
     def __init__(self,
                  num_cnns=2,
@@ -478,6 +477,7 @@ class GAOptimizer:
                     train_info = self.train_model(individual)
                     test_accuracy = self.test_model(individual, self.test_loader)
                     last_val_accuracy = train_info[1][-1] if train_info[1] else 0.0
+                    train_info = {'train_losses': train_info[0], 'val_accuracies': train_info[1], 'test_accuracy': test_accuracy}
                     fitness = (last_val_accuracy + test_accuracy) / 2.0
                 except RuntimeError as e:
                     print(f"RuntimeError encountered: {e}")
@@ -485,9 +485,9 @@ class GAOptimizer:
                     fitness = 0.0
 
                 generation_metrics.append({
-                    'train_losses': train_info[0],
-                    'val_accuracies': train_info[1],
-                    'test_accuracy': test_accuracy,
+                    'train_losses': train_info['train_losses'],
+                    'val_accuracies': train_info['val_accuracies'],
+                    'test_accuracy': train_info['test_accuracy'],
                     'fitness': fitness
                 })
                 fitness_scores.append(fitness)
@@ -501,7 +501,9 @@ class GAOptimizer:
             print(f"Best fitness in generation {generation + 1}: {best_fitness:.4f}")
 
             filename = os.path.join(best_model_dir, f"generation_{generation + 1:02d}.pth")
-            torch.save(best_child.state_dict(), filename)
+            # best_child.to('cpu')
+            # torch.save(best_child.state_dict(), filename)
+            torch.save(best_child, filename)
             print(f"Saved best model for generation {generation + 1} as {filename}")
 
             num_selected = self.population_size // 2
@@ -524,14 +526,14 @@ class GAOptimizer:
 
             if best_fitness >= 0.9999:
                 print("Achieved nearly perfect fitness. Early stopping (potential overfitting).")
-                torch.save(best_child.state_dict(), os.path.join(best_model_dir, f"generation_{generation + 1:02d}_overfitting.pth"))
+                torch.save(best_child, os.path.join(best_model_dir, f"generation_{generation + 1:02d}_overfitting.pth"))
                 if previous_best_child:
-                    torch.save(previous_best_child.state_dict(), os.path.join(best_model_dir, f"generation_{generation + 1:02d}_overfitting_prev.pth"))
+                    torch.save(previous_best_child, os.path.join(best_model_dir, f"generation_{generation + 1:02d}_overfitting_prev.pth"))
                 break
 
             if generation_without_change >= 10:
                 print("No significant improvement in recent generations. Early stopping.")
-                torch.save(best_child.state_dict(), os.path.join(best_model_dir, f"generation_{generation + 1:02d}_no_improvement.pth"))
+                torch.save(best_child, os.path.join(best_model_dir, f"generation_{generation + 1:02d}_no_improvement.pth"))
                 break
 
             previous_best_child = best_child
@@ -539,7 +541,7 @@ class GAOptimizer:
 
         else:
             print("Finished all generations.")
-            torch.save(best_child.state_dict(), os.path.join(best_model_dir, f"generation_{self.generations:02d}_final.pth"))
+            torch.save(best_child, os.path.join(best_model_dir, f"generation_{self.generations:02d}_final.pth"))
 
         self.save_population_metrics_history(population_metrics_history)
 

@@ -1,21 +1,23 @@
 from .genetic_algorithm import *
 from torch.utils.data import DataLoader
 from torch.nn.functional import softmax
-import glob
+# import glob
 
 def evaluate(dataset, saved_path, args):
-    test_loader = DataLoader(dataset, batchsize=args['batch_size'], shuffle=False)
+    args = {**DEFAULT_ARGS, **args}
+    print(args)
+    test_loader = DataLoader(dataset, batch_size=args['batch_size'], shuffle=False)
     
     saved_dir = src_path / 'results' / 'models' / 'genetic_algorithm' / 'best_model'
-    saved_path = glob.glob(str(saved_dir) + '/*.pt') 
-   
+    saved_path = list(Path(saved_dir).glob('*final.pt')) + list(Path(saved_dir).glob('*final.pth'))
     
-    if os.path.exists(saved_path):
-        model = torch.load(saved_path)
-        print(f"Loaded model from {saved_path}")
+    model = DynamicNN()
+    if saved_path:
+        model =torch.load(saved_path[0])
+        print(f"Loaded model from {saved_path[0]}")
     else:
         raise FileNotFoundError("No GAoptimized model found.")
-    
+
     device = 'cpu'
     model.to(device)
     

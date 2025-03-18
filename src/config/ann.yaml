@@ -1,7 +1,7 @@
 model: "ann"
 
 model_args:
-  batch_size: 64
+  batch_size: 32
   epochs: 50
   patience: 15
 

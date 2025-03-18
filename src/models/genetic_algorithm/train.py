@@ -1,8 +1,10 @@
 from .genetic_algorithm import *
 from torch.utils.data import DataLoader, random_split
+from utils.logger import get_logger
 
 def train(dataset, save_dir, args):
     args = {**DEFAULT_ARGS, **args}
+    logger = get_logger('genetic_algorithm')
     
     criterion = nn.NLLLoss()
     
@@ -24,12 +26,12 @@ def train(dataset, save_dir, args):
 
     population_metrics_history = ga_optimizer.run()
 
-    print("\nPopulation Metrics History:")
+    logger.info("\nPopulation Metrics History:")
     for gen_index, gen_metrics in enumerate(population_metrics_history, start=1):
-        print(f"\nGeneration {gen_index}:")
+        logger.info(f"\nGeneration {gen_index}:")
         for ind_index, metric in enumerate(gen_metrics, start=1):
-            print(f"  Individual {ind_index}:")
-            print(f"    Fitness: {metric['fitness']:.4f}")
-            print(f"    Final Test Accuracy: {metric['test_accuracy']:.4f}")
-            print(f"    Training Losses per Epoch: {metric['train_losses']}")
-            print(f"    Validation Accuracies per Epoch: {metric['val_accuracies']}")
+            logger.info(f"  Individual {ind_index}:")
+            logger.info(f"    Fitness: {metric['fitness']:.4f}")
+            logger.info(f"    Final Test Accuracy: {metric['test_accuracy']:.4f}")
+            logger.info(f"    Training Losses per Epoch: {metric['train_losses']}")
+            logger.info(f"    Validation Accuracies per Epoch: {metric['val_accuracies']}")

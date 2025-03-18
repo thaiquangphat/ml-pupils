@@ -7,6 +7,9 @@ from utils.dataloader import get_dataset
 from utils.utils import get_latest_model_path, kaggle_download
 from utils.testutils import metric_results
 import os
+import sys
+
+sys.path.append(os.path.abspath(".")) 
 
 os.environ['PYTHONHASHSEED'] = '42'
 # function to load config.json file
@@ -19,8 +22,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Run ML models on image dataset.")
     parser.add_argument("--config",type=str, help="Path to config JSON file")
     parser.add_argument("--model", type=str, help="Choose the model to run (e.g., decision_tree, ann).")
+    
     parser.add_argument("--train", action="store_true", help="Train the selected model.")
     parser.add_argument("--eval", action="store_true", help="Evaluate the selected model.")
+    
     parser.add_argument("--dataset", type=str, default="masoudnickparvar/brain-tumor-mri-dataset", help="Kaggle dataset")
     parser.add_argument("--data_dir", type=str, default="dataset/raw", help="Path to dataset.")
     parser.add_argument("--save_data_dir", type=str, default="dataset/processed", help="Path to saved data.")
@@ -58,16 +63,18 @@ if __name__ == "__main__":
 
     train_dir = data_dir / "Training"
     test_dir = data_dir / "Testing"
+            
 
     # Dynamically load the model module
     try:
-        model_module = importlib.import_module(f"models.{args.model}")
+        train_module = importlib.import_module(f"models.{args.model}.train")
+        eval_module = importlib.import_module(f"models.{args.model}.eval")
     except ModuleNotFoundError:
-        raise ValueError(f"Model '{args.model}' not found. Ensure there is a corresponding file in models/.")
+        raise ValueError(f"Model '{args.model}.train|eval' not found. Ensure there is a corresponding file in models/.")
 
     # Dynamically load train and evaluate functions
-    train_func = getattr(model_module, "train", None)
-    eval_func = getattr(model_module, "evaluate", None)
+    train_func = getattr(train_module, "train", None)
+    eval_func = getattr(eval_module, "evaluate", None)
 
     if not train_func or not eval_func:
         raise ValueError(f"Model '{args.model}' must define 'train' and 'evaluate' functions.")
