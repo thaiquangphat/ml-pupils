@@ -1,0 +1,13 @@
+matplotlib
+networkx
+numpy
+opencv_python_headless
+pandas
+pgmpy
+PyYAML
+scikit_learn
+scipy
+seaborn
+skimage
+torch
+tqdm

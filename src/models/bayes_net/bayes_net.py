@@ -8,7 +8,7 @@ from utils.utils import save_pkl, load_pkl, get_save_name, discretize_data
 from models.bayes_net.build_features import segment_and_extract_features
 from tqdm import tqdm
 from pathlib import Path
-# from visualize.visualization import visualize_bayesian_network
+from visualize.visualization import visualize_bayesian_network
 from utils.logger import get_logger
 import time
 

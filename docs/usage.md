@@ -46,3 +46,17 @@ model_args:
 metrics: ["accuracy_score", "auc_score"]
 ```
 This will train the ANN model on 100 epochs with logging every 10 epochs.
+
+## Bayesian Network Update
+- Dataloader: extracted features from preprocessed npz files, save to directory feature_output (must have the npz files first, so run other models before this)
+- New visualization feature for network and feature correlation
+- Option `naive`: substitute bayesian network to naive bayes (a special type of bayesian network)
+- Challenge: feature extraction is weak thus the model has low accuracy.
+- Further improvement: allow more estimator options and improve feature extraction
+- Example usage: 
+```
+python -m run --model bayes_net --naive --train --eval accuracy_score --chunk_size 1000 --visualize --viz_type network --viz_output results/feature_correlations.png --show_viz
+```
+Explanation: Train the naive bayes model by extracting features from train.npz with chunk size 1000, then evaluate the model by extracting features from test.npz with chunk size 1000 using accuracy_score as metric. Then visualize the naive bayes network, save output to a png file, and show it.
+
+- Should also work with config.yaml file

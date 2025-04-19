@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+import torch
 from skimage.filters import rank
 from skimage.morphology import disk
 from skimage.transform import rotate
@@ -64,12 +64,17 @@ def preprocess_images(image_dir, img_size=(256, 256)):
     data = []
     labels = []
     
-    classes = os.listdir(image_dir)
+    classes = [f for f in os.listdir(image_dir) if f != '.DS_Store']
+    print(classes)
     
     for c, label in enumerate(classes):
         class_path = os.path.join(image_dir, label)
         
         for img_file in tqdm(os.listdir(class_path)):
+            # Skip hidden files
+            if img_file.startswith('.'):
+                continue
+
             img_path = os.path.join(class_path, img_file)
             img = cv2.imread(img_path)
             if len(img.shape) == 3:  

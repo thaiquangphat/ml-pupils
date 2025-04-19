@@ -28,7 +28,10 @@ def metric_results(y_true, y_pred, y_score, metric_lst):
     for metric in metric_lst:
         if metric == "auc_score":
             score = roc_auc_score(y_true, y_score, multi_class="ovr")
+        elif metric in ["f1_score", "precision_score", "recall_score"]:
+            score = eval(f"{metric}(y_true, y_pred, average='weighted')") 
         else:
             score = eval(f"{metric}(y_true, y_pred)") 
         score_lst.append(score)
     return score_lst
+    

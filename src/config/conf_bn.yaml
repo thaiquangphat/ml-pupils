@@ -1,0 +1,15 @@
+model: "bayes_net"
+model_args:
+  discretize_features: true
+  bins: 5
+  estimator: "bayes"
+  naive: false
+  chunk_size: 1000
+  output_dir: "features/output"
+  visualization:
+    enabled: true
+    type: "network"
+    output_file: "results/visualizations/bayes_net_structure.png"
+    show: true
+
+metrics: ["full"]
