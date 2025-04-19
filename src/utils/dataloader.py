@@ -19,15 +19,16 @@ def save_numpy(save_path, X, y):
     np.savez_compressed(save_path, X=X, y=y)
     
 class ImageDataset(Dataset):
-    def __init__(self, image_dir, save_path, X=None, y=None, img_size=IMG_SIZE):
+    def __init__(self, image_dir=None, save_path=None, X=None, y=None, img_size=IMG_SIZE):
         """Initialize dataset: Load and preprocess images."""
         if X is not None and y is not None:
-            # Use provided data
-            self.images = X
-            self.labels = y
-        else:
+            self.images, self.labels = X,y
+        elif image_dir:
             self.images, self.labels = preprocess_images(image_dir, img_size)
+            self.images = self.images.astype(np.float16)
             save_numpy(save_path, self.images, self.labels)
+        else:
+            raise ValueError("Either image_dir not None or X,y not None.")
         
     def __len__(self):
         return len(self.images)
@@ -36,7 +37,7 @@ class ImageDataset(Dataset):
         image = self.images[idx]
         label = self.labels[idx]
         
-        image = torch.tensor(image, dtype=torch.float32)
+        image = torch.tensor(image, dtype=torch.float32).unsqueeze(0)
         label = torch.tensor(label, dtype=torch.long)
 
         return image, label

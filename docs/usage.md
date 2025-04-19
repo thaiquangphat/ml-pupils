@@ -1,7 +1,15 @@
 # USAGE
 
 ## Quick start
-Clone the repo, go the src/ directory, run with command:
+1. Clone the repo and install dependencies:
+```
+git clone https://github.com/thaiquangphat/ml-pupils
+cd ml-pupils
+```
+```
+conda env create -f environment.yml
+```
+2. Go the src/ directory, run with command:
 ```
 python -m run --model ann [options]
 ```
@@ -15,18 +23,18 @@ Options include:
 - `--save_data_dir`: Directory path to saved processed data files.Default: `dataset/processed/`
 - `--saved_path`: Path to saved model. Can be a checkpoint for ANN models or fully trained scikit-learn models. If not specified, the model will be trained from scratch.
 - `--metrics`: List of test metrics on the test set. Currently support ["full", "accuracy_score", "f1_score", "precision_score", "recall_score", "auc_score"]. Default: ["full"] -> print classification report
-- `--batch_size`: For batch dataloading of ANN model. Default: 64
 
 ## Example usage:
 ```
 python -m run --model ann --train --eval --batch_size 32 --metrics accuracy_score auc_score
 ```
 This will train the model ANN from scratch using a batch size of 32 and evaluate on accuracy_score and auc_score.
+
 OR
 ```
-python -m run --config ./config.yaml --train --eval
+python -m run --config ann.yaml --train --eval
 ```
-in `src/config.yaml`
+in `src/config/ann.yaml`
 ```
 model: "ann"
 batch_size: 32

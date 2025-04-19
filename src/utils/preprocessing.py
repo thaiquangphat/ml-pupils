@@ -46,8 +46,9 @@ def preprocess_mri(img):
     img = apply_mask(img)       
     img = augment_image(img)
     img = cv2.resize(img, IMG_SIZE) 
-    img = img / 255.0          
-    return img
+    scaler = StandardScaler()
+    img_norm = scaler.fit_transform(img)
+    return img_norm.reshape(IMG_SIZE) 
     
 def preprocess_images(image_dir, img_size=(256, 256)):
     """

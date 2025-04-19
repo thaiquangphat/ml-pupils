@@ -11,6 +11,7 @@ ml-pupils
     │── models/
     │── results/models/
     │── utils/
+    |── run.py
 |── tests
 |── requirements.txt 
 ```
@@ -27,7 +28,9 @@ Orchestrate the flow of arguments parsing, path definition, data preprocessing, 
 - **processed/**: Save processed data in `.npz` format. Newly created dataset will be processed and save as `train.npz` and `test.npz`.
 
 ### Models
-Include python files implementing ML models, for example decision_tree.py. Each model must implement a `train` and a `evaluate` function 
+Each subfolder dedicate to a model implementation. For example, `ann/` have ann.py (define necesarry classes, functions, default arguments,...), train.py (define `train`function), eval.py (define `evaluate` function)/
+Each model must implement a `train` and a `evaluate` function in their corresponding .py file.
+
 #### Train
 ```
 train(dataset, save_dir, **args**)
@@ -60,6 +63,7 @@ Include dataset preprocessing, dataloading, and utilities
 - **dataloader.py**: encapsulate data in `ImageDataset`, use `get_dataset` to get the ImageDataset object. When an instance of ImageDataset is created, the images and labels will be processed by `preprocessing.process_image` and save to `dataset/processed` as .npz file  
 - **testutils.py**: include function for testing and evaluating on different metrics
 - **utils.py**: other utilities
+- **logger.py**: implement logging functionalities
 
 ### Results
 Store running log and results

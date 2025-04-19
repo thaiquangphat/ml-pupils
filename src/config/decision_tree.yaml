@@ -1,0 +1,8 @@
+model: "decision_tree"
+
+model_args:
+  max_features: [500,700,1000,2000,5000,10000,20000]
+  min_samples_leaf: [10, 20, 30, 50, 100]
+
+metrics: ["accuracy_score", "auc_score", "full"]
+

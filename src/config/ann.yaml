@@ -1,0 +1,9 @@
+model: "ann"
+
+model_args:
+  batch_size: 32
+  epochs: 50
+  patience: 15
+
+metrics: ["accuracy_score", "auc_score","full"]
+

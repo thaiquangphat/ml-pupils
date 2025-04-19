@@ -11,7 +11,8 @@ def get_latest_model_path(directory):
     model_files = sorted(
         chain(
             Path(directory).glob("*.pkl"),  
-            Path(directory).glob("*.pth")   
+            Path(directory).glob("*.pt"),
+            Path(directory).glob("*.pth")  
         ),
         key=os.path.getmtime,  
         reverse=True           
