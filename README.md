@@ -4,11 +4,30 @@ Machine learning course @ HCMUT
 
 ## Project Team Member and Contribution
 
-- Thai Quang Phat: Data preprocessing, Project Setup
-- Nguyen Ngoc Khoi: Implementation of: Naive Bayes, Bayesian Network, Hidden Markov Model, and Hard Margin Support Vector Machine (also support other kernels)
-- Nguyen Ngoc Song Thuong: Data Preprocessing, Decision Tree and ANN Implementation
-- Pham Duy Tuong Phuoc: Data Preprocessing, Result Analysis, Project Documentation
-- Ha Nguyen Bao Phuc: GA Implementation
+- **Thai Quang Phat:** 
+  - Data preprocessing
+  - Project Setup
+  - Support Vector Machine Polynomial
+  - Random Forest
+- **Nguyen Ngoc Khoi:**
+  - Naive Bayes
+  - Bayesian Network
+  - Hidden Markov Model
+  - Hard Margin Support Vector Machine (also support other kernels)
+- **Nguyen Ngoc Song Thuong:**
+  - Data Preprocessing
+  - Decision Tree
+  - ANN Implementation
+  - Support Vector Machine RBF, CRF
+- **Pham Duy Tuong Phuoc:**
+  - Data Preprocessing
+  - Result Analysis
+  - Project Documentation
+  - Decision Tree
+  - Gradient Boosting
+- **Ha Nguyen Bao Phuc:** 
+  - Genetic Algorithm
+  - Logistic Regression
 
 ## Project Description
 
