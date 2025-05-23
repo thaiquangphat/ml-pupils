@@ -1,2 +1,22 @@
 .DS_Store
-.npz
+*.npz
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore environment folders
+env/
+venv/
+myenv/
+
+# Ignore the dataset
+src/dataset/
+src/features/
+
+# Ignore IDE/project files
+.vscode/
+.idea/
+
+# Ignore data and log files
+*.log
+*.csv

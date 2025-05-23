@@ -8,6 +8,6 @@ PyYAML
 scikit_learn
 scipy
 seaborn
-skimage
+scikit-image
 torch
 tqdm
