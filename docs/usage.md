@@ -60,3 +60,11 @@ python -m run --model bayes_net --naive --train --eval accuracy_score --chunk_si
 Explanation: Train the naive bayes model by extracting features from train.npz with chunk size 1000, then evaluate the model by extracting features from test.npz with chunk size 1000 using accuracy_score as metric. Then visualize the naive bayes network, save output to a png file, and show it.
 
 - Should also work with config.yaml file
+
+## HMM and SVM run
+- Change parameters in the configuration `.yaml` file.
+
+```python src/run.py --model hmm --train --eval --config src/config/hmm.yaml```
+
+```python src/run.py --model svm --train --eval --config src/config/svm.yaml```
+**Note:** The SVM model will take 1-2 hours to run due to its complex calculation and solving equations. Proceed carefully.

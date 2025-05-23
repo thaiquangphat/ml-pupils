@@ -63,5 +63,25 @@
 - Separate train and evaluate function into separate files under their model folder.
 - Change run.py accordingly to import train and evaluate function dynamically
 
-### Add:
+### Added:
 - Add GA model implementation into pipeline
+
+## [2.0.0] - 22-04-2025
+### Added:
+- Add SVM model implementation
+
+## [2.1.0] - 24-04-2025
+### Added:
+- Add HMM implementation
+
+## [2.2.0] - 01-05-2025
+### Modified
+- Add logger feature for the training and evaluation process of both SVM and HMM models.
+
+## [2.3.0] - 18-05-2025
+### Modified
+- Fixed minor bugs
+- Recheck the models' performance.
+
+### Added
+- Add documentation about SVM and HMM on README.

@@ -218,6 +218,35 @@ The Hidden Markov Model (HMM) implementation uses a Gaussian HMM approach for tu
   - Batch processing for efficient evaluation
   - Comprehensive error handling and logging
 
+### Evaluation
+#### Result
+```
+              precision    recall  f1-score   support
+
+           0       0.98      1.00      0.99       300
+           1       0.45      0.36      0.40       405
+           2       0.31      0.46      0.37       300
+           3       0.33      0.26      0.29       306
+
+    accuracy                           0.51      1311
+   macro avg       0.52      0.52      0.51      1311
+weighted avg       0.51      0.51      0.50      1311
+```
+
+**Overall Performance:**
+- The HMM model achieves an overall accuracy of 51%, which is slightly better than random guessing for a four-class problem (25%).
+- The precision, recall, and F1-score vary significantly across different classes, indicating that the model performs unevenly.
+
+**What Can Be Inferred:**
+- **Class 0 (No Tumor):** The model performs exceptionally well for this class with a precision of 0.98 and recall of 1.00, indicating that it can accurately identify non-tumor cases.
+- **Class 1 (Glioma):** The model struggles with glioma detection, achieving a precision of 0.45 and recall of 0.36. This suggests that the model often misclassifies glioma cases or fails to detect them.
+- **Class 2 (Meningioma):** The model has a low precision of 0.31 but a slightly better recall of 0.46, indicating that it can identify some meningioma cases but with many false positives.
+- **Class 3 (Pituitary):** The model performs poorly with a precision of 0.33 and recall of 0.26, suggesting that it struggles significantly with this tumor type.
+
+**Areas for Improvement:**
+- The model's performance could be improved by enhancing the feature extraction process or using more sophisticated HMM architectures.
+- Addressing class imbalance and exploring additional features specific to tumor types might help improve classification accuracy.
+
 ## Support Vector Machine (SVM)
 
 The SVM implementation provides a robust approach to tumor classification using both linear and non-linear kernels.
@@ -264,6 +293,35 @@ The SVM implementation provides a robust approach to tumor classification using 
     ```
   - Probability estimates for each class using predict_proba
   - Comprehensive error handling and logging
+
+### Evaluation
+#### Result
+```
+              precision    recall  f1-score   support
+
+           0       0.75      0.90      0.82       300
+           1       0.85      0.96      0.90       405
+           2       0.77      0.67      0.72       300
+           3       0.67      0.52      0.58       306
+
+    accuracy                           0.77      1311
+   macro avg       0.76      0.76      0.75      1311
+weighted avg       0.77      0.77      0.77      1311
+```
+
+**Overall Performance:**
+- The SVM model achieves an overall accuracy of 77%, which is a significant improvement over the HMM model.
+- The precision, recall, and F1-score are relatively balanced across different classes, indicating consistent performance.
+
+**What Can Be Inferred:**
+- **Class 0 (No Tumor):** The model performs well with a precision of 0.75 and recall of 0.90, indicating that it can accurately identify non-tumor cases.
+- **Class 1 (Glioma):** The model achieves high precision (0.85) and recall (0.96), suggesting that it is effective at detecting glioma cases.
+- **Class 2 (Meningioma):** The model has a precision of 0.77 and recall of 0.67, indicating good performance but with room for improvement in recall.
+- **Class 3 (Pituitary):** The model performs moderately with a precision of 0.67 and recall of 0.52, suggesting that it can identify some pituitary cases but with a higher rate of false negatives.
+
+**Areas for Improvement:**
+- The SVM model could benefit from further tuning of hyperparameters and exploring different kernel functions to enhance performance.
+- Incorporating additional features or using ensemble methods like bagging and boosting might further improve classification accuracy.
 
 ## Kernel SVM
 
