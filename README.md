@@ -274,9 +274,35 @@ The SVM implementation provides a robust approach to tumor classification using 
 
 ## Kernel SVM
 
-### SVM CRF
+### SVM RBF
 
 ### SVM Polynomial Kernel
+
+### Implementation Summary
+- **Feature Extraction:** Features are extracted from images using a pre-trained VGG19 model and further processed with PCA for dimensionality reduction.
+- **Preprocessing:**
+  - Features are scaled using `StandardScaler`.
+  - PCA is applied to reduce dimensionality (up to 64 components).
+- **Model:**
+  - `SVC(kernel="poly", degree=2, C=1.0, probability=True)` from scikit-learn is used.
+  - The model is trained on the processed features.
+
+```python
+scaler = StandardScaler()
+train_features_scaled = scaler.fit_transform(train_features)
+train_features_pca = pca.fit_transform(train_features_scaled)
+svm_model = SVC(kernel="poly", degree=2, C=1.0, probability=True)
+svm_model.fit(train_features_pca, train_labels)
+```
+
+### Custom SVM Implementation (Polynomial Kernel Degree 2)
+
+### Implementation Summary
+- **Kernel:**
+  - Custom `SVMPolyDegree2` class implements the kernel: \(K(x, y) = (x \cdot y + 1)^2\)
+  - Uses quadratic programming (via `cvxopt`) to solve the dual problem.
+- **Multiclass:**
+  - `MultiClassSVM_OvR` implements One-vs-Rest for multiclass classification.
 
 #### 1. Initialization
 The model is initialized with a regularization parameter C:
