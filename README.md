@@ -23,9 +23,9 @@ Machine learning course @ HCMUT
   - Data Preprocessing
   - Result Analysis
   - Project Documentation
-  - Decision Tree
   - Gradient Boosting
 - **Ha Nguyen Bao Phuc:** 
+  - Data Preprocessing
   - Genetic Algorithm
   - Logistic Regression
 
