@@ -464,15 +464,12 @@ The SVM-RBF model outperforms the Decision Tree model significantly, especially 
 The SVM-RBF model provides a strong balance between interpretability and performance, achieving 79% accuracy, which is significantly better than a Decision Tree (53%). Its use of kernel-based non-linearity and PCA makes it more robust for high-dimensional data. While SVM-RBF is simpler, easier to interpret, and faster to train than deep learning models, it falls short in high-stakes medical imaging tasks where maximizing diagnostic accuracy is critical.
 
 For more details about implementation, please visit this [link](src/models/svm_rbf/)
-Here is a **Markdown-formatted description** for your CRF-based model, structured similarly to your ANN model description and including comparison to ANN and ResNet18:
 
----
 
 ## Conditional Random Field (CRF)-Based Model
 
 The implemented CRF-based model combines a convolutional neural network (CNN) feature extractor with a Conditional Random Field (CRF) layer for structured classification. This architecture is designed to leverage spatial dependencies in the image for more coherent predictions, particularly valuable in applications such as medical imaging.
 
----
 
 ### Architecture Overview
 
