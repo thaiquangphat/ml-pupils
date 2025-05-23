@@ -306,6 +306,7 @@ The genetic algorithm plays as an optimizer to optimize the performance of the D
 
 For more details about implementation, please visit this [link](genetic_algorithm/Main.ipynb)
 
+
 ## Bayesian Network and Naive Bayes
 
 ### Feature Extraction Process
@@ -425,12 +426,32 @@ weighted avg       0.63      0.61      0.61      1311
     - More sophisticated segmentation techniques could improve feature quality
     - Consider domain-specific features based on medical knowledge
 
-## Logistic Regression
-In this section, we built a simple Logistic regression model to classify only 2 of 4 classes of the dataset, `notumor` and `glioma`. However, in order to have better performance, we use 2 CNN layers. Then, the Linear classifier follows and produces the output.
+### Use Case Fit Conclusion:
+#### Naive Bayes
+Naive Bayes is effective for classification tasks where features are conditionally independent given the class label. It is particularly useful in scenarios with high-dimensional data and when the assumption of feature independence holds reasonably well.
 
-The implementation is based on PyTorch, the device used in the training is `cuda`.
+**Well-suited for:**
+- Text classification tasks, such as spam detection or sentiment analysis, where word occurrences are treated as independent features.
+- Medical diagnosis with structured categorical data, where symptoms or test results are used as features.
+- Situations with small datasets, where the simplicity of Naive Bayes can prevent overfitting.
 
-The model is trained for 40 epoches. The plots of training loss and validation loss shown those two losses both converge after training, from 18 to nearly 8 and also will converge when increasing the number of epoches.
+**Not well-suited for:**
+- Complex image classification tasks where pixel dependencies are significant.
+- Scenarios requiring modeling of interactions between features, as Naive Bayes assumes feature independence.
+- Datasets with continuous features that do not follow a Gaussian distribution, unless discretization or transformation is applied.
+
+#### Bayesian Network:
+Bayesian Networks are powerful for modeling probabilistic relationships between variables, making them suitable for tasks involving uncertainty and causal inference.
+
+**Well-suited for:**
+- Medical diagnosis and decision support systems, where understanding causal relationships between symptoms and diseases is crucial.
+- Risk assessment and management, where probabilistic dependencies between risk factors are modeled.
+- Scenarios requiring explainable AI, as Bayesian Networks provide interpretable models.
+
+**Not well-suited for:**
+- Large-scale image classification tasks, where the complexity of modeling pixel-level dependencies is high.
+- Real-time applications requiring fast inference, as Bayesian Networks can be computationally intensive.
+- Datasets with a large number of variables, where the network structure becomes complex and difficult to manage.
 
 ## Hidden Markov Model
 
@@ -489,6 +510,49 @@ The Hidden Markov Model (HMM) implementation uses a Gaussian HMM approach for tu
   - Batch processing for efficient evaluation
   - Comprehensive error handling and logging
 
+### Evaluation
+#### Result
+```
+              precision    recall  f1-score   support
+
+           0       0.98      1.00      0.99       300
+           1       0.45      0.36      0.40       405
+           2       0.31      0.46      0.37       300
+           3       0.33      0.26      0.29       306
+
+    accuracy                           0.51      1311
+   macro avg       0.52      0.52      0.51      1311
+weighted avg       0.51      0.51      0.50      1311
+```
+
+**Overall Performance:**
+- The HMM model achieves an overall accuracy of 51%, which is slightly better than random guessing for a four-class problem (25%).
+- The precision, recall, and F1-score vary significantly across different classes, indicating that the model performs unevenly.
+
+**What Can Be Inferred:**
+- **Class 0 (No Tumor):** The model performs exceptionally well for this class with a precision of 0.98 and recall of 1.00, indicating that it can accurately identify non-tumor cases.
+- **Class 1 (Glioma):** The model struggles with glioma detection, achieving a precision of 0.45 and recall of 0.36. This suggests that the model often misclassifies glioma cases or fails to detect them.
+- **Class 2 (Meningioma):** The model has a low precision of 0.31 but a slightly better recall of 0.46, indicating that it can identify some meningioma cases but with many false positives.
+- **Class 3 (Pituitary):** The model performs poorly with a precision of 0.33 and recall of 0.26, suggesting that it struggles significantly with this tumor type.
+
+**Areas for Improvement:**
+- The model's performance could be improved by enhancing the feature extraction process or using more sophisticated HMM architectures.
+- Addressing class imbalance and exploring additional features specific to tumor types might help improve classification accuracy.
+
+
+### Use Case Fit Conclusion:
+HMMs are ideal for modeling temporal or sequential data, capturing patterns over time or sequences.
+
+**Well-suited for:**
+- Speech recognition and natural language processing tasks, where sequences of words or phonemes are analyzed.
+- Time-series analysis, such as stock market prediction or weather forecasting.
+- Biological sequence analysis, like DNA or protein sequence alignment.
+
+**Not well-suited for:**
+- Static image classification tasks, where temporal dependencies are not present.
+- Scenarios requiring high-dimensional feature spaces, as HMMs can struggle with large feature sets.
+- Real-time applications with strict latency requirements, due to the computational complexity of HMMs.
+
 ## Support Vector Machine (SVM)
 
 The SVM implementation provides a robust approach to tumor classification using both linear and non-linear kernels.
@@ -535,6 +599,50 @@ The SVM implementation provides a robust approach to tumor classification using 
     ```
   - Probability estimates for each class using predict_proba
   - Comprehensive error handling and logging
+
+### Evaluation
+#### Result
+```
+              precision    recall  f1-score   support
+
+           0       0.75      0.90      0.82       300
+           1       0.85      0.96      0.90       405
+           2       0.77      0.67      0.72       300
+           3       0.67      0.52      0.58       306
+
+    accuracy                           0.77      1311
+   macro avg       0.76      0.76      0.75      1311
+weighted avg       0.77      0.77      0.77      1311
+```
+
+**Overall Performance:**
+- The SVM model achieves an overall accuracy of 77%, which is a significant improvement over the HMM model.
+- The precision, recall, and F1-score are relatively balanced across different classes, indicating consistent performance.
+
+**What Can Be Inferred:**
+- **Class 0 (No Tumor):** The model performs well with a precision of 0.75 and recall of 0.90, indicating that it can accurately identify non-tumor cases.
+- **Class 1 (Glioma):** The model achieves high precision (0.85) and recall (0.96), suggesting that it is effective at detecting glioma cases.
+- **Class 2 (Meningioma):** The model has a precision of 0.77 and recall of 0.67, indicating good performance but with room for improvement in recall.
+- **Class 3 (Pituitary):** The model performs moderately with a precision of 0.67 and recall of 0.52, suggesting that it can identify some pituitary cases but with a higher rate of false negatives.
+
+**Areas for Improvement:**
+- The SVM model could benefit from further tuning of hyperparameters and exploring different kernel functions to enhance performance.
+- Incorporating additional features or using ensemble methods like bagging and boosting might further improve classification accuracy.
+
+### Use Case Fit Conclusion:
+SVMs are robust for classification tasks with clear margins of separation between classes, especially in high-dimensional spaces.
+
+**Well-suited for:**
+- Binary classification tasks with well-separated classes, such as tumor vs. non-tumor detection.
+- Scenarios with limited data, where SVMs can generalize well with the right kernel choice.
+- Applications requiring high-dimensional feature spaces, as SVMs handle them effectively.
+
+**Not well-suited for:**
+- Large-scale datasets, where training time and memory usage can become prohibitive.
+- Multiclass classification tasks without appropriate strategies like One-vs-Rest or One-vs-One.
+- Non-linear problems without a suitable kernel, as linear SVMs may not capture complex patterns.
+
+
 
 ## Kernel SVM
 
