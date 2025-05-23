@@ -161,6 +161,13 @@ weighted avg       0.63      0.61      0.61      1311
     - More sophisticated segmentation techniques could improve feature quality
     - Consider domain-specific features based on medical knowledge
 
+## Logistic Regression
+In this section, we built a simple Logistic regression model to classify only 2 of 4 classes of the dataset, `notumor` and `glioma`. However, in order to have better performance, we use 2 CNN layers. Then, the Linear classifier follows and produces the output.
+
+The implementation is based on PyTorch, the device used in the training is `cuda`.
+
+The model is trained for 40 epoches. The plots of training loss and validation loss shown those two losses both converge after training, from 18 to nearly 8 and also will converge when increasing the number of epoches.
+
 ## Hidden Markov Model
 
 The Hidden Markov Model (HMM) implementation uses a Gaussian HMM approach for tumor classification. This model is particularly effective for capturing temporal and sequential patterns in the image features.
@@ -267,6 +274,125 @@ The SVM implementation provides a robust approach to tumor classification using 
 
 ## Kernel SVM
 
+### SVM CRF
+
+### SVM Polynomial Kernel
+
+#### 1. Initialization
+The model is initialized with a regularization parameter C:
+$$
+\text{Initialize with } C = 1.0 \text{ (default)}
+$$
+
+#### 2. Polynomial Kernel Function
+The polynomial kernel of degree 2 is implemented as:
+$$
+K(x, y) = (x \cdot y + 1)^2
+$$
+where:
+- $x$ and $y$ are feature vectors
+- $x \cdot y$ is the dot product
+- The kernel maps the input space to a higher-dimensional feature space
+
+#### 3. Training Process (Dual Problem)
+The SVM training solves the following quadratic programming problem:
+
+$$
+\min_{\alpha} \frac{1}{2}\alpha^T P \alpha + q^T \alpha
+$$
+
+Subject to:
+$$
+G \alpha \leq h
+$$
+$$
+A \alpha = b
+$$
+
+Where:
+- $P = (y_i y_j K(x_i, x_j))_{i,j}$ is the kernel matrix
+- $q = -1$ (vector of ones)
+- $G = \begin{bmatrix} -I \\ I \end{bmatrix}$ (constraints matrix)
+- $h = \begin{bmatrix} 0 \\ C \end{bmatrix}$ (constraints vector)
+- $A = y^T$ (equality constraint)
+- $b = 0$ (equality constraint)
+
+#### 4. Support Vector Selection
+After solving the QP problem, support vectors are selected where:
+$$
+\alpha_i > 1e^{-5}
+$$
+
+#### 5. Bias Calculation
+The bias term is calculated as:
+$$
+b = \frac{1}{n_{sv}} \sum_{k=1}^{n_{sv}} (y_k - \sum_{i=1}^{n_{sv}} \alpha_i y_i K(x_k, x_i))
+$$
+where:
+- $n_{sv}$ is the number of support vectors
+- $x_k, y_k$ are support vectors and their labels
+- $\alpha_i$ are the Lagrange multipliers
+- $K(x_k, x_i)$ is the kernel function
+
+#### 6. Decision Function
+For prediction, the decision function is:
+$$
+f(x) = \text{sign}(\sum_{i=1}^{n_{sv}} \alpha_i y_i K(x, x_i) + b)
+$$
+
+#### 7. Multiclass Extension (One-vs-Rest)
+For multiclass classification, the model uses One-vs-Rest approach:
+- For each class $c$:
+  - Create binary labels: $y_i = 1$ if $x_i \in c$, else $y_i = -1$
+  - Train a binary SVM classifier
+  - Store the decision function $f_c(x)$
+- Final prediction: $\arg\max_c f_c(x)$ 
+
 ## Dimension Reduction: LDA / PCA
+In this section, the PCA is utilize from the `sklearn` framework. PCA is used to lower the dimension of the images. Specifically, an image, after pre-processed, is decomposed to a vector of size 512. The images are then fed to a simple fully connected networks with 3 Linear layers to classify 2 classes: `notumor` and `glioma`. 
+
+However, the performance is not as expected. The results plot shows that both training loss and validation loss are fluctuate. The reason for this is that when decomposing an image (which is originally a 2D array) to a 1D array will drop the spatial patterns of the images and then lower the performance of the classifier. 
 
 ## Bagging and Boosting
+
+### Gradient Boosting
+
+#### Model Overview
+
+XGBoost is a scalable and efficient gradient boosting framework. The model is tailored for multiclass classification, distinguishing between four tumor categories. We leveraged automated hyperparameter optimization via Hyperopt using the Tree-structured Parzen Estimator (TPE) algorithm to fine-tune model performance.
+
+#### Data Preparation
+
+MRI image data were reshaped into 2D feature vectors, with each sample flattened to ensure compatibility with XGBoost’s tree-based architecture. Corresponding tumor labels served as the target variable. The dataset was split into training and validation sets using stratified random sampling to maintain class distribution.
+
+#### Hyperparameter Optimization
+
+To optimize the learning process, we defined a search space over several key hyperparameters, including max_depth, learning_rate, gamma, reg_alpha, reg_lambda, colsample_bytree, min_child_weight, and subsample. Hyperopt evaluated model performance using the validation accuracy as the objective metric, employing early stopping to prevent overfitting. The best hyperparameters discovered were stored and reused for final model training.
+
+#### Model Training and Evaluation
+
+After identifying the optimal hyperparameters, we retrained the model with early stopping on the validation split to determine the best number of boosting rounds (n_estimators). A final model was then trained on the entire dataset using this optimal configuration. Throughout the process, model performance was monitored using the multi-class log loss (mlogloss) metric.
+
+#### Overall Model Performance
+
+The current XGBoost model demonstrates moderate performance (overall accuracy: 68%, macro F1-score: 0.64) in classifying brain tumor types from MRI features. It shows strong predictive ability for certain tumor types (especially Class 1), but struggles significantly with others (particularly Class 3, with an F1-score of 0.37), likely due to overlapping visual features or limited discriminatory power in the input data.
+
+#### Use case fit conclusion
+
+XGBoost would perform more effectively on structured data derived from images—such as radiomics features (e.g., shape, edge sharpness, contrast), clinical metadata, or segmentation-derived metrics. These high-level descriptors align well with XGBoost’s strength in handling heterogeneous, tabular features.
+
+Well-suited for:
+
+- Preprocessed, structured feature sets extracted from MRI images (e.g., radiomics or handcrafted features).
+
+- Tabular datasets combining clinical, genomic, and imaging-derived summaries.
+
+- Situations with limited image data, where CNNs may overfit but tree models can generalize better from fewer samples.
+
+Not well-suited for:
+
+- Raw pixel-based MRI classification without spatial modeling.
+
+- Complex image classification tasks requiring understanding of shape, context, and relative position (e.g., differentiating tumors with similar intensity but different location).
+
+- Applications where convolutional neural networks (CNNs) or hybrid deep learning models would be more appropriate.
