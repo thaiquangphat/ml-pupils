@@ -428,7 +428,132 @@ weighted avg       0.63      0.61      0.61      1311
 
 For more details about implementation, please visit this [link](src/models/bayes_net/)
 
-## Support Vector Machine (SVM)
+## SVM with RBF Kernel
+
+The Support Vector Machine (SVM) with Radial Basis Function (RBF) kernel is employed as a non-linear classifier for brain tumor classification. This method maps high-dimensional image features into a higher-dimensional space using a Gaussian kernel, enabling it to capture complex, non-linear decision boundaries. Given the high dimensionality of the original 256×256 image inputs, we first apply Principal Component Analysis (PCA) to reduce the feature space to 1024 dimensions before training, significantly improving efficiency and reducing overfitting risk.
+
+We use `SVC` from `sklearn.svm` with 5-fold cross-validation to validate performance across splits and select the best-performing model based on validation accuracy.
+
+### **Hyperparameter & Training Setup**
+
+* **Kernel:** RBF (Radial Basis Function), allowing non-linear classification.
+* **Dimensionality Reduction:** PCA to 1024 components.
+* **Cross-validation:** 5-fold K-Fold cross-validation for robustness.
+* **Model Selection:** Best-performing model across folds based on validation accuracy.
+
+### **Performance Metrics**
+
+* **Overall Accuracy:** 79%
+* **Macro Average F1-score:** 0.77
+* **Weighted Average F1-score:** 0.78
+
+#### **Class-wise Performance**
+
+| Class | Precision | Recall | F1-Score | Support |
+| ----- | --------- | ------ | -------- | ------- |
+| 0     | 0.76      | 0.73   | 0.74     | 300     |
+| 1     | 0.75      | 0.51   | 0.60     | 306     |
+| 2     | 0.85      | 0.96   | 0.90     | 405     |
+| 3     | 0.76      | 0.91   | 0.83     | 300     |
+
+### **Observations & Insights**
+The SVM-RBF model outperforms the Decision Tree model significantly, especially for class 2 and class 3, thanks to its ability to capture complex boundaries. PCA + SVM results in better generalization on unseen data, as evidenced by high recall and F1-scores. Class 1 has lower recall and F1-score, suggesting sensitivity to insufficient separation in feature space.
+
+### **Use Case Fit Conclusion**
+
+The SVM-RBF model provides a strong balance between interpretability and performance, achieving 79% accuracy, which is significantly better than a Decision Tree (53%). Its use of kernel-based non-linearity and PCA makes it more robust for high-dimensional data. While SVM-RBF is simpler, easier to interpret, and faster to train than deep learning models, it falls short in high-stakes medical imaging tasks where maximizing diagnostic accuracy is critical.
+
+For more details about implementation, please visit this [link](src/models/svm_rbf/)
+Here is a **Markdown-formatted description** for your CRF-based model, structured similarly to your ANN model description and including comparison to ANN and ResNet18:
+
+---
+
+## Conditional Random Field (CRF)-Based Model
+
+The implemented CRF-based model combines a convolutional neural network (CNN) feature extractor with a Conditional Random Field (CRF) layer for structured classification. This architecture is designed to leverage spatial dependencies in the image for more coherent predictions, particularly valuable in applications such as medical imaging.
+
+---
+
+### Architecture Overview
+
+The model consists of three main components:
+
+1. **Backbone**: A CNN that extracts spatial features from input MRI images.
+2. **CRF Layer**: A probabilistic graphical model applied over flattened features to model sequential dependencies between image parts.
+3. **Final Classifier**: Aggregates CRF-decoded features and outputs class probabilities.
+
+| Layer              | Operation                                                     | Output Size               |
+| ------------------ | ------------------------------------------------------------- | ------------------------- |
+| *Input*            | -                                                             | 1 × 256 × 256             |
+| *Conv Block 1*     | `Conv2D(1 → 32)` → `BatchNorm2D` → `ReLU` → `MaxPool2D(2×2)`  | 32 × 128 × 128            |
+| *Conv Block 2*     | `Conv2D(32 → 64)` → `BatchNorm2D` → `ReLU` → `MaxPool2D(2×2)` | 64 × 64 × 64              |
+| *Reshape*          | Reshape to (B, 4096, 64)                                      | (B, 4096, 64)             |
+| *Emission Layer*   | `Linear(64 → 4)`                                              | (B, 4096, 4)              |
+| *CRF Layer*        | Viterbi decoding to select best label sequence                | List of 4096 labels/class |
+| *One-hot Decode*   | Convert predictions to one-hot and perform mean pooling       | (B, 4)                    |
+| *Final Classifier* | `Linear(4 → 4)`                                               | (B, 4)                    |
+
+### Key Components
+
+#### CNN Backbone
+
+The convolutional layers serve as a feature extractor to encode spatial and texture information from MRI images into a compact representation. Each convolutional block uses batch normalization and ReLU activation followed by max pooling to downsample and stabilize learning.
+
+#### Emission Layer
+
+A linear transformation maps the spatial features into emission scores that are input to the CRF layer. These scores represent the likelihood of each class at each location (flattened from the spatial dimensions).
+
+#### CRF Layer
+
+The CRF models structured dependencies across all image parts (treated as a sequence of regions). It performs **Viterbi decoding** to find the optimal label assignment that considers not only local predictions but also consistency across spatially related regions. This is useful for handling local noise and promoting spatial coherence in predictions.
+
+#### Aggregation & Classification
+
+The decoded output is converted into a one-hot representation, then aggregated by averaging over all regions. This mean vector is passed to a final linear layer for classification.
+
+### Experimental Setup
+
+The model was trained using the **CPU** environment due to hardware constraints. Despite the limitation in processing speed, the model was trained for a substantial number of epochs with early stopping enabled to prevent overfitting.
+
+#### Hyperparameters
+
+| Hyperparameter  | Value               |
+| --------------- | ------------------- |
+| Learning Rate   | 0.002               |
+| Batch Size      | 64                  |
+| Max Epochs      | 1000                |
+| Patience        | 10 (early stopping) |
+| Train/Val Split | 90% / 10%           |
+| Hardware        | CPU                 |
+| Epochs Trained  | 250                 |
+
+> Note: The model continued to improve in validation loss until around epoch 237, suggesting longer training could still yield improvements despite CPU limitations. 
+
+### Performance Metrics
+
+* **Overall Accuracy**: 41%
+* **Macro Average F1-score**: 0.40
+* **Weighted Average F1-score**: 0.40
+
+#### Class-wise Performance
+
+| Class | Precision | Recall | F1-Score | Support |
+| ----- | --------- | ------ | -------- | ------- |
+| 0     | 0.35      | 0.47   | 0.40     | 300     |
+| 1     | 0.44      | 0.25   | 0.32     | 306     |
+| 2     | 0.41      | 0.54   | 0.47     | 405     |
+| 3     | 0.51      | 0.34   | 0.41     | 300     |
+
+### Observations & Issues
+* The CRF-based model reaches an accuracy of **41%**, significantly underperforming compared to the ANN and ResNet18.
+* Performance is inconsistent across classes, indicating unstable learning or poor generalization.
+* Despite the loss continuing to decrease in training, the model fails to translate this to validation accuracy, possibly overfitting.
+* A likely reason is the CRF's assumption of structured sequence-like dependencies over 2D image regions, which may not suit this classification task unless explicitly designed with spatial structure awareness (e.g., 2D-CRF or segmentation-based tasks).
+
+### Use Case Fit Conclusion
+
+While CRFs are powerful for modeling sequential or structured outputs, in this brain tumor classification use case, the CRF-based approach fails to outperform simpler convolutional networks. The lack of spatial layout preservation in the CRF sequence flattening likely reduces its effectiveness. The model could be adapted for segmentation tasks where CRFs shine, but for classification, simpler CNNs or pretrained networks (like ResNet18) are far more effective and reliable.
+
 
 ## Dimension Reduced LDA or PCA
 
