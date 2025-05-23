@@ -5,6 +5,7 @@ import torch
 from skimage.filters import rank
 from skimage.morphology import disk
 from skimage.transform import rotate
+from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
 IMG_SIZE = (256, 256)
