@@ -9,12 +9,6 @@ def train(dataset, save_dir, args):
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = eval(f"{args['model']}()").to(device)
-    # if args['model'] == 'ResNet18':
-    #     model = ResNet18().to(device)
-    # else:
-    #     model = ANN().to(device)
-    
-    # model = ANN().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     

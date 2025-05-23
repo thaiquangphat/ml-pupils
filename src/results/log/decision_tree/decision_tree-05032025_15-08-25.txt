@@ -1,4 +1,0 @@
-2025-03-05 15:08:25,069 - {'n_splits': 5, 'criterion': ['gini', 'entropy'], 'max_features': [500, 700, 1000, 2000, 5000, 10000, 20000], 'min_samples_leaf': [10, 20, 30, 50, 100]}
-2025-03-05 15:08:25,070 - Decision Tree train with 5-fold cross-validation
-2025-03-05 15:08:25,071 - Grid search parameters: 
-2025-03-05 15:08:25,071 - {'criterion': ['gini', 'entropy'], 'max_features': [500, 700, 1000, 2000, 5000, 10000, 20000], 'min_samples_leaf': [10, 20, 30, 50, 100]}

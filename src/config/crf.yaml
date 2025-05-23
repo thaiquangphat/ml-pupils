@@ -1,0 +1,11 @@
+model: "crf"
+
+model_args:
+  batch_size: 64
+  epochs: 1000
+  patience: 10
+  lr: 0.002
+  checkpoint_path: D:\hcmut\SV242\ML\ml-pupils\src\results\models\crf\crf_17052025_14-04-58.pt
+
+metrics: ["accuracy_score", "auc_score","full"]
+

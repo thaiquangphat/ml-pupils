@@ -1,3 +1,0 @@
-2025-03-18 15:48:22,160 - {'model': 'ANN', 'epochs': 50, 'log_step': 1, 'split': [0.9, 0.1], 'checkpoint_path': None, 'patience': 15, 'batch_size': 32}
-2025-03-18 15:48:30,142 - Checkpoint saved at results/models/ann/ANN_18032025_15-48-23.pt
-2025-03-18 15:48:30,143 - Epoch [1/50] - Train loss: 0.8081 - Val loss: 0.6530
