@@ -2,10 +2,10 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Contributors](https://img.shields.io/github/contributors/yourusername/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/graphs/contributors)
-[![Issues](https://img.shields.io/github/issues/yourusername/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/issues)
-[![Forks](https://img.shields.io/github/forks/yourusername/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/network/members)
-[![Stars](https://img.shields.io/github/stars/yourusername/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/stargazers)
+[![Contributors](https://img.shields.io/github/contributors/thaiquangphat/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/thaiquangphat/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/issues)
+[![Forks](https://img.shields.io/github/forks/thaiquangphat/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/network/members)
+[![Stars](https://img.shields.io/github/stars/thaiquangphat/ml-pupils)](https://github.com/thaiquangphat/ml-pupils/stargazers)
 
 <div align="center">
   <img src="src/dataset/raw/Testing/glioma/Te-gl_0010.jpg" alt="Brain Tumor MRI" width="150"/>
