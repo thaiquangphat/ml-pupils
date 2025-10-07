@@ -56,7 +56,7 @@ For detailed information about each model's implementation, performance metrics,
 
 - **Thai Quang Phat:** Data preprocessing, Project Setup, SVM Polynomial, Random Forest
 - **Nguyen Ngoc Khoi:** Naive Bayes, Bayesian Network, HMM, Hard Margin SVM
-- **Nguyen Ngoc Song Thuong:** Data Preprocessing, Decision Tree, ANN, SVM RBF/CRF
+- **Nguyen Ngoc Song Thuong:** Data Preprocessing, Decision Tree, ANN, SVM RBF, CRF
 - **Pham Duy Tuong Phuoc:** Data Preprocessing, Result Analysis, Documentation, Gradient Boosting
 - **Ha Nguyen Bao Phuc:** Data Preprocessing, Genetic Algorithm, Logistic Regression
 
@@ -109,5 +109,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - HCMUT Machine Learning course instructors for guidance and support
 
 ## Contact
+
 
 For any questions or suggestions, please open an issue in the GitHub repository.
